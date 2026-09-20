@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eumedical — Asistencia sanitaria digital sin fronteras</title>
+<meta name="description" content="Red médica propia, teleconsulta 24/7 y médicos a domicilio en más de 80 países.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Didact+Gothic&display=swap" rel="stylesheet">
+<style>
+  /* ============ TOKENS (from Eumedical Brand Book, sept. 2021) ============ */
+  :root{
+    --navy:#1e4865;        /* primario */
+    --navy-2:#153549;      /* variante oscura, para fondos profundos */
+    --sage:#79b19c;        /* secundario */
+    --sage-deep:#2f6653;   /* variante AA-safe sobre blanco */
+    --sage-pale:#bfd7cd;
+    --mist:#e8eeec;
+    --cloud:#f2f2f2;
+    --gold:#e79f1a;        /* acento primario (CTA) */
+    --amber:#efbc0b;       /* acento secundario */
+    --ink:#152329;         /* negro tintado, nunca #000 puro */
+    --white:#ffffff;
+
+    --display: "Fredoka", "Didact Gothic", sans-serif;
+    --label: "Didact Gothic", sans-serif;
+    --body: Arial, "Helvetica Neue", Helvetica, sans-serif; /* tipografía de sistema del manual de marca */
+
+    --radius-pill: 999px;
+    --radius-lg: 28px;
+    --measure: 62ch;
+    --edge: clamp(32px, 6vw, 64px);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--white); color:var(--ink);
+    font-family:var(--body); font-size:16px; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{max-width:100%; display:block;}
+  a{color:inherit;}
+  h1,h2,h3,h4{font-family:var(--display); font-weight:600; margin:0; color:var(--navy);}
+  p{margin:0;}
+  ul{margin:0; padding:0; list-style:none;}
+  button{font:inherit; cursor:pointer;}
+
+  :focus-visible{outline:3px solid var(--gold); outline-offset:3px; border-radius:4px;}
+
+  .skip-link{
+    position:absolute; left:-999px; top:0; background:var(--navy); color:var(--white);
+    padding:12px 20px; z-index:200; border-radius:0 0 8px 0;
+  }
+  .skip-link:focus{left:0;}
+
+  .wrap{max-width:1180px; margin:0 auto; padding-left:var(--edge); padding-right:var(--edge);}
+  .eyebrow{
+    font-family:var(--label); font-size:0.98rem; color:var(--sage-deep);
+    letter-spacing:0.01em;
+  }
+
+  /* ============ CROSS MARK — recurring graphic device from the brand book ============ */
+  .cross{
+    --s:22px; width:var(--s); height:var(--s); position:relative; flex:none;
+  }
+  .cross::before,.cross::after{
+    content:""; position:absolute; background:var(--gold); border-radius:999px;
+  }
+  .cross::before{ left:38%; top:0; width:24%; height:100%; }
+  .cross::after{ top:38%; left:0; height:24%; width:100%; }
+  .cross.sage::before,.cross.sage::after{background:var(--sage);}
+  .cross.white::before,.cross.white::after{background:var(--white);}
+
+  /* ============ HEADER ============ */
+  header.site{
+    position:sticky; top:0; z-index:100; background:rgba(255,255,255,.92);
+    backdrop-filter:saturate(160%) blur(10px);
+    border-bottom:1px solid var(--mist);
+  }
+  .nav-row{display:flex; align-items:center; justify-content:space-between; gap:24px; height:76px;}
+  .logo{display:flex; align-items:center; gap:8px; font-family:var(--display); font-weight:600; font-size:1.4rem; color:var(--navy); text-decoration:none;}
+  nav.primary{display:flex; align-items:center; gap:28px;}
+  nav.primary a{font-family:var(--label); font-size:1rem; text-decoration:none; color:var(--navy); padding:6px 2px; border-bottom:2px solid transparent;}
+  nav.primary a:hover{border-bottom-color:var(--sage);}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; justify-content:center;
+    padding:13px 26px; border-radius:var(--radius-pill); font-family:var(--label);
+    font-size:1rem; text-decoration:none; border:2px solid transparent; transition:transform .15s ease, box-shadow .15s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn-gold{background:var(--gold); color:var(--navy-2); font-weight:700;}
+  .btn-gold:hover{box-shadow:0 10px 24px -10px rgba(231,159,26,.6);}
+  .btn-outline{border-color:var(--navy); color:var(--navy); background:transparent;}
+  .btn-outline:hover{background:var(--navy); color:var(--white);}
+  .btn-outline.on-dark{border-color:rgba(255,255,255,.55); color:var(--white);}
+  .btn-outline.on-dark:hover{background:var(--white); color:var(--navy);}
+  .btn-ghost{color:var(--navy); text-decoration:underline; text-underline-offset:3px; padding:13px 6px;}
+
+  .burger{display:none; background:none; border:none; width:44px; height:44px; position:relative;}
+  .burger span, .burger span::before, .burger span::after{
+    content:""; position:absolute; left:10px; right:10px; height:2px; background:var(--navy);
+  }
+  .burger span{top:21px;}
+  .burger span::before{top:-7px;}
+  .burger span::after{top:7px;}
+
+  /* ============ HERO ============ */
+  .hero{
+    padding:76px 0 96px; overflow:hidden; position:relative;
+  }
+  .hero .wrap{display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center;}
+  .hero h1{font-size:clamp(2.3rem, 4vw, 3.4rem); line-height:1.08; letter-spacing:-0.01em; margin:14px 0 22px;}
+  .hero p.lead{font-size:1.15rem; color:#3c4c55; max-width:46ch; margin-bottom:32px;}
+  .hero-ctas{display:flex; gap:16px; flex-wrap:wrap;}
+
+  .hero-art{
+    position:relative; aspect-ratio:1/1; border-radius:var(--radius-lg);
+    background:linear-gradient(45deg, var(--navy) 0%, var(--sage) 100%);
+    overflow:hidden;
+  }
+  .hero-art .dot{position:absolute; border-radius:999px; background:rgba(255,255,255,.14);}
+  .hero-art .cross-big{position:absolute; opacity:.9;}
+  .hero-art .cross-big::before,.hero-art .cross-big::after{background:var(--white); opacity:.16;}
+  .live-chip{
+    position:absolute; left:24px; bottom:24px; right:24px; background:var(--white);
+    border-radius:18px; padding:16px 18px; display:flex; align-items:center; gap:12px;
+    box-shadow:0 20px 40px -16px rgba(21,35,41,.35);
+  }
+  .pulse{width:10px; height:10px; border-radius:999px; background:var(--sage-deep); position:relative; flex:none;}
+  .pulse::after{content:""; position:absolute; inset:-6px; border-radius:999px; border:2px solid var(--sage-deep); animation:pulse 2.2s ease-out infinite;}
+  @keyframes pulse{0%{transform:scale(.5); opacity:.9;} 100%{transform:scale(1.8); opacity:0;}}
+  .live-chip strong{display:block; font-family:var(--label); font-size:.95rem; color:var(--navy);}
+  .live-chip span{font-size:.85rem; color:#5a6b73;}
+
+  /* ============ SECTION SCAFFOLD ============ */
+  section{padding:88px var(--edge);}
+  section .wrap{padding-left:0; padding-right:0;}
+  .section-head{max-width:640px; margin-bottom:48px;}
+  .section-head h2{font-size:clamp(1.7rem,2.6vw,2.3rem); margin-top:10px;}
+  .section-head p{color:#3c4c55; margin-top:14px; font-size:1.05rem;}
+
+  /* ============ CAPACIDADES (value prop) — hairline rows, not boxed cards ============ */
+  .cap-list{border-top:1px solid var(--mist);}
+  .cap-row{
+    display:grid; grid-template-columns:auto 1.1fr 1.4fr; gap:28px; align-items:center;
+    padding:30px 6px; border-bottom:1px solid var(--mist);
+  }
+  .cap-row:nth-child(even){background:linear-gradient(90deg, var(--cloud), transparent 70%);}
+  .cap-row h3{font-size:1.2rem;}
+  .cap-row p{color:#3c4c55;}
+
+  /* ============ SERVICIOS — asymmetric grid, varied tile sizes ============ */
+  .svc-grid{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:2px; background:var(--mist);
+    border-radius:var(--radius-lg); overflow:hidden;
+  }
+  .svc-tile{
+    background:var(--white); padding:30px 26px; display:flex; flex-direction:column; gap:14px; min-height:190px;
+  }
+  .svc-tile.big{grid-column:span 2; grid-row:span 2; background:var(--navy); color:var(--white); justify-content:space-between;}
+  .svc-tile.big h3{color:var(--white);}
+  .svc-tile.big p{color:var(--sage-pale);}
+  .svc-tile.tint{background:var(--cloud);}
+  .svc-tile h3{font-size:1.05rem;}
+  .svc-tile p{font-size:.94rem; color:#3c4c55; margin:0;}
+
+  /* ============ CONFIANZA / MÉTRICAS — full navy band ============ */
+  .trust{background:var(--navy); color:var(--white);}
+  .trust .eyebrow{color:var(--sage-pale);}
+  .trust h2{color:var(--white);}
+  .stat-row{display:grid; grid-template-columns:repeat(5,1fr); gap:24px; margin-top:44px;}
+  .stat b{display:block; font-family:var(--display); font-size:clamp(1.8rem,3vw,2.6rem); color:var(--amber);}
+  .stat span{font-family:var(--label); font-size:.92rem; color:var(--sage-pale);}
+  .quote{
+    margin-top:56px; padding:40px 6px 0; border-top:1px solid rgba(255,255,255,.18);
+    display:grid; grid-template-columns:auto 1fr; gap:20px; align-items:start;
+  }
+  .quote p{font-size:1.15rem; max-width:52ch; font-family:var(--display); font-weight:500; line-height:1.4;}
+  .quote footer{margin-top:12px; font-family:var(--label); color:var(--sage-pale); font-size:.9rem;}
+
+  /* ============ CORPORATIVO ============ */
+  .corp .wrap{display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start;}
+  .corp p{color:#3c4c55; margin-top:16px; max-width:52ch;}
+  .reach-list{margin-top:28px; display:flex; flex-direction:column; gap:0;}
+  .reach-list li{display:flex; gap:14px; padding:16px 6px; border-top:1px solid var(--mist); align-items:flex-start;}
+  .reach-list li:last-child{border-bottom:1px solid var(--mist);}
+  .reach-list b{font-family:var(--label); color:var(--navy); display:block;}
+  .reach-list span{color:#3c4c55; font-size:.94rem;}
+
+  /* ============ CONTACTO ============ */
+  .contact{background:var(--cloud);}
+  .contact .wrap{display:grid; grid-template-columns:0.9fr 1.1fr; gap:64px;}
+  .contact-info li{display:flex; gap:14px; padding:16px 6px; border-bottom:1px solid var(--sage-pale); align-items:center;}
+  .contact-info li:first-child{border-top:1px solid var(--sage-pale);}
+  .contact-info b{display:block; font-family:var(--label); color:var(--navy); font-size:.85rem;}
+  form.contact-form{display:grid; gap:16px;}
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  label{display:block; font-family:var(--label); font-size:.9rem; color:var(--navy); margin-bottom:6px;}
+  input, textarea{
+    width:100%; padding:13px 14px; border-radius:12px; border:1.5px solid var(--sage-pale);
+    background:var(--white); font-family:var(--body); font-size:1rem; color:var(--ink);
+  }
+  input:focus, textarea:focus{border-color:var(--sage-deep);}
+  .form-note{font-size:.85rem; color:#5a6b73;}
+  .form-note a{color:var(--sage-deep);}
+  #contact-status{font-family:var(--label); color:var(--sage-deep); min-height:1.2em;}
+
+  /* ============ FOOTER ============ */
+  footer.site{background:var(--navy-2); color:var(--sage-pale); padding:56px 0 30px;}
+  .foot-row{display:flex; justify-content:space-between; gap:32px; flex-wrap:wrap; padding:0 6px 36px; border-bottom:1px solid rgba(255,255,255,.14);}
+  .foot-logo{font-family:var(--display); font-weight:600; color:var(--white); font-size:1.3rem; display:flex; gap:8px; align-items:center;}
+  .foot-links{display:flex; gap:40px; flex-wrap:wrap;}
+  .foot-links h3{color:var(--white); font-size:.85rem; font-family:var(--label); margin-bottom:10px;}
+  .foot-links a{display:block; color:var(--sage-pale); text-decoration:none; font-size:.92rem; padding:4px 0;}
+  .foot-links a:hover{color:var(--white);}
+  .foot-bottom{display:flex; justify-content:space-between; padding-top:22px; font-size:.85rem; flex-wrap:wrap; gap:10px;}
+
+  /* ============ PATIENT AREA (Part B) ============ */
+  #patient-view{display:none;}
+  body.show-patient #site-view{display:none;}
+  body.show-patient #patient-view{display:block;}
+
+  .app-shell{min-height:100vh; display:grid; grid-template-columns:264px 1fr; background:var(--cloud);}
+  .app-side{background:var(--navy-2); color:var(--white); padding:26px 20px; display:flex; flex-direction:column;}
+  .app-logo{display:flex; gap:8px; align-items:center; font-family:var(--display); font-weight:600; font-size:1.2rem; padding:0 6px 26px;}
+  .app-nav{display:flex; flex-direction:column; gap:4px; flex:1;}
+  .app-nav button{
+    display:flex; align-items:center; gap:12px; text-align:left; background:none; border:none; color:var(--sage-pale);
+    padding:13px 14px; border-radius:12px; font-family:var(--label); font-size:.98rem;
+  }
+  .app-nav button .ic{width:9px; height:9px; border-radius:999px; background:currentColor; opacity:.5; flex:none;}
+  .app-nav button:hover{background:rgba(255,255,255,.06); color:var(--white);}
+  .app-nav button.active{background:var(--sage-deep); color:var(--white);}
+  .app-exit{margin-top:auto; padding-top:20px; border-top:1px solid rgba(255,255,255,.14);}
+  .app-exit button{width:100%; background:none; border:1.5px solid rgba(255,255,255,.35); color:var(--white); border-radius:999px; padding:11px; font-family:var(--label);}
+
+  .app-main{padding:34px clamp(20px,4vw,52px); max-width:980px;}
+  .app-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; gap:20px;}
+  .app-top h1{font-size:1.7rem;}
+  .app-avatar{width:44px; height:44px; border-radius:999px; background:var(--sage-deep); color:var(--white); display:flex; align-items:center; justify-content:center; font-family:var(--display); font-weight:600;}
+
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  .next-appt{
+    background:var(--navy); color:var(--white); border-radius:var(--radius-lg); padding:30px; margin-bottom:28px;
+    display:grid; grid-template-columns:1fr auto; gap:20px; align-items:center;
+  }
+  .next-appt .eyebrow{color:var(--sage-pale);}
+  .next-appt h2{color:var(--white); font-size:1.5rem; margin-top:8px;}
+  .next-appt p{color:var(--sage-pale); margin-top:4px;}
+
+  .quick-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-bottom:30px;}
+  .quick-card{background:var(--white); border-radius:18px; padding:22px; border:1px solid var(--mist);}
+  .quick-card b{display:block; font-family:var(--display); font-size:1.7rem; color:var(--navy);}
+  .quick-card span{font-family:var(--label); font-size:.88rem; color:#5a6b73;}
+
+  .list-row{
+    display:grid; grid-template-columns:auto 1fr auto; gap:16px; align-items:center;
+    background:var(--white); border:1px solid var(--mist); border-radius:16px; padding:18px 20px; margin-bottom:12px;
+  }
+  .list-row .dot-status{width:10px; height:10px; border-radius:999px; background:var(--sage-deep); flex:none;}
+  .list-row .dot-status.past{background:#b9c2c6;}
+  .list-row h3{font-size:1.05rem; font-weight:600; margin-bottom:3px; color:var(--navy);}
+  .list-row p{font-size:.9rem; color:#5a6b73;}
+  .tag{font-family:var(--label); font-size:.78rem; padding:4px 10px; border-radius:999px; background:var(--mist); color:var(--sage-deep); white-space:nowrap;}
+  .tag.warn{background:#fbe8c4; color:#8a5f04;}
+
+  .empty-state{
+    text-align:center; padding:60px 20px; border:1.5px dashed var(--sage-pale); border-radius:20px; color:#5a6b73;
+  }
+  .empty-state h3{color:var(--navy); margin-bottom:8px; font-size:1.1rem;}
+
+  .profile-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+
+  @media (max-width:920px){
+    nav.primary, .hero-ctas .btn-outline{display:none;}
+    .burger{display:block;}
+    .hero .wrap{grid-template-columns:1fr;}
+    .hero-art{order:-1; max-width:420px;}
+    .corp .wrap, .contact .wrap{grid-template-columns:1fr;}
+    .stat-row{grid-template-columns:repeat(2,1fr);}
+    .svc-grid{grid-template-columns:repeat(2,1fr);}
+    .svc-tile.big{grid-column:span 2; grid-row:span 1;}
+    .cap-row{grid-template-columns:auto 1fr; }
+    .cap-row p{grid-column:2/3;}
+    .app-shell{grid-template-columns:1fr;}
+    .app-side{flex-direction:row; overflow-x:auto; align-items:center;}
+    .app-nav{flex-direction:row;}
+    .app-exit{display:none;}
+    .quick-grid{grid-template-columns:1fr;}
+    .field-row, .profile-grid{grid-template-columns:1fr;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .pulse::after{animation:none;}
+    .btn{transition:none;}
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
+<!-- ================= MARKETING SITE (Part A) ================= -->
+<div id="site-view">
+  <header class="site">
+    <div class="wrap nav-row">
+      <a class="logo" href="#top"><span class="cross" aria-hidden="true"></span> eumedical</a>
+      <nav class="primary" aria-label="Navegación principal">
+        <a href="#capacidades">Capacidades</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#nosotros">Nosotros</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+      <div style="display:flex; gap:12px; align-items:center;">
+        <button class="btn btn-outline" id="open-patient" type="button">Área paciente</button>
+        <a class="btn btn-gold" href="#contacto">Reservar consulta</a>
+      </div>
+      <button class="burger" aria-label="Abrir menú" aria-expanded="false" id="burger-btn"><span></span></button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div class="wrap">
+        <div>
+          <p class="eyebrow">SALUD DIGITAL SIN FRONTERAS</p>
+          <h1>Capacidades médicas en más de 80 países, siempre a un clic.</h1>
+          <p class="lead">Red médica propia, teleconsulta 24/7 y coordinación sanitaria para pacientes y empresas, con el mismo estándar de calidad estés donde estés.</p>
+          <div class="hero-ctas">
+            <a class="btn btn-gold" href="#contacto">Reservar consulta</a>
+            <a class="btn btn-outline" href="#nosotros">Ver cobertura</a>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="dot" style="width:160px;height:160px; top:-40px; right:-40px;"></div>
+          <div class="dot" style="width:90px;height:90px; bottom:120px; left:-20px;"></div>
+          <div class="cross-big cross" style="--s:70px; top:18%; left:14%;"></div>
+          <div class="cross-big cross" style="--s:44px; top:44%; left:52%;"></div>
+          <div class="cross-big cross" style="--s:34px; top:60%; left:20%;"></div>
+          <div class="live-chip">
+            <span class="pulse"></span>
+            <div>
+              <strong>En línea ahora</strong>
+              <span>Dra. Martínez · Medicina general</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAPACIDADES -->
+    <section id="capacidades">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">PROPUESTA DE VALOR</p>
+          <h2>Cuatro formas de llevar la atención médica hasta donde estés</h2>
+        </div>
+        <div class="cap-list">
+          <div class="cap-row">
+            <span class="cross" aria-hidden="true"></span>
+            <h3>Red médica propia</h3>
+            <p>Más de 80 países y 10 idiomas cubiertos con profesionales propios, no subcontratados.</p>
+          </div>
+          <div class="cap-row">
+            <span class="cross" aria-hidden="true"></span>
+            <h3>Atención médica digital 24/7</h3>
+            <p>Accesible en cualquier momento y desde cualquier lugar, sin listas de espera.</p>
+          </div>
+          <div class="cap-row">
+            <span class="cross" aria-hidden="true"></span>
+            <h3>Tecnología avanzada</h3>
+            <p>Plataforma segura, fiable y sencilla de usar, sin que tu equipo tenga que desarrollar nada.</p>
+          </div>
+          <div class="cap-row">
+            <span class="cross" aria-hidden="true"></span>
+            <h3>Médicos a domicilio</h3>
+            <p>Coordinación de visitas presenciales en España, Portugal, Italia y Francia.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICIOS -->
+    <section id="servicios" style="background:var(--cloud);">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">SERVICIOS</p>
+          <h2>Un servicio médico para cada situación</h2>
+          <p>Desde una consulta puntual hasta la cobertura sanitaria completa de tu empresa u organización.</p>
+        </div>
+        <div class="svc-grid">
+          <div class="svc-tile big">
+            <span class="cross white" aria-hidden="true"></span>
+            <div>
+              <h3>Teleconsulta 24/7</h3>
+              <p>Acceso inmediato a un médico a cualquier hora, con prescripción médica local válida.</p>
+            </div>
+          </div>
+          <div class="svc-tile">
+            <span class="cross" aria-hidden="true"></span>
+            <h3>Médicos a domicilio</h3>
+            <p>Atención en casa sin necesidad de desplazarte.</p>
+          </div>
+          <div class="svc-tile tint">
+            <span class="cross" aria-hidden="true"></span>
+            <h3>Rondas médicas</h3>
+            <p>Evaluación del estado de salud de un grupo de personas.</p>
+          </div>
+          <div class="svc-tile">
+            <span class="cross" aria-hidden="true"></span>
+            <h3>Coordinación de ambulancias</h3>
+            <p>Gestión ágil para traslados urgentes o programados.</p>
+          </div>
+          <div class="svc-tile tint">
+            <span class="cross" aria-hidden="true"></span>
+            <h3>Médicos especialistas</h3>
+            <p>Acceso a profesionales de distintas áreas clínicas.</p>
+          </div>
+          <div class="svc-tile">
+            <span class="cross" aria-hidden="true"></span>
+            <h3>Fit to fly</h3>
+            <p>Certificación médica para volar de forma segura.</p>
+          </div>
+          <div class="svc-tile tint">
+            <span class="cross" aria-hidden="true"></span>
+            <h3>Central operativa 24/7</h3>
+            <p>Coordinación médica disponible todos los días del año.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONFIANZA / MÉTRICAS -->
+    <section class="trust">
+      <div class="wrap">
+        <p class="eyebrow">EUMEDICAL, FACTOR DIFERENCIAL</p>
+        <h2>Una calidad que se sostiene en cada consulta</h2>
+        <div class="stat-row">
+          <div class="stat"><b>90k</b><span>Pacientes satisfechos</span></div>
+          <div class="stat"><b>250</b><span>Médicos expertos</span></div>
+          <div class="stat"><b>70k</b><span>Recetas aceptadas</span></div>
+          <div class="stat"><b>10</b><span>Especialidades médicas</span></div>
+          <div class="stat"><b>4.9/5</b><span>Valoración media</span></div>
+        </div>
+        <div class="quote">
+          <span class="cross" aria-hidden="true"></span>
+          <div>
+            <p>“Cada vez que he necesitado un médico fuera de España, Eumedical ha respondido en minutos y en mi idioma.”</p>
+            <footer>Paciente Eumedical · valoración de servicio, 2025</footer>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CORPORATIVO -->
+    <section id="nosotros" class="corp">
+      <div class="wrap">
+        <div>
+          <p class="eyebrow">SOBRE NOSOTROS</p>
+          <h2>Asistencia sanitaria digital con capacidad internacional</h2>
+          <p>Ponemos a disposición de nuestros partners el conocimiento local en más de 80 países, con un enfoque holístico en cada caso que gestionamos: la misma experiencia de paciente, en cualquier parte del mundo.</p>
+          <p>Trabajamos con empresas, aseguradoras y particulares que necesitan una red médica en la que puedan confiar, hable el idioma que hable su gente.</p>
+        </div>
+        <div>
+          <p class="eyebrow">NUESTRA COBERTURA</p>
+          <ul class="reach-list">
+            <li><span class="cross" aria-hidden="true"></span><div><b>80+ países</b><span>Red médica propia activa</span></div></li>
+            <li><span class="cross" aria-hidden="true"></span><div><b>10+ idiomas</b><span>Atención en el idioma del paciente</span></div></li>
+            <li><span class="cross" aria-hidden="true"></span><div><b>España · Portugal · Italia · Francia</b><span>Cobertura de médicos a domicilio</span></div></li>
+            <li><span class="cross" aria-hidden="true"></span><div><b>Madrid</b><span>Central operativa médica 24/7</span></div></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto" class="contact">
+      <div class="wrap">
+        <div>
+          <p class="eyebrow">HABLA CON NOSOTROS</p>
+          <h2>Resolvemos todas tus dudas</h2>
+          <ul class="contact-info">
+            <li><span class="cross" aria-hidden="true"></span><div><b>Email</b>business@eumedical.es</div></li>
+            <li><span class="cross" aria-hidden="true"></span><div><b>Teléfono</b>+34 919 22 78 10</div></li>
+            <li><span class="cross" aria-hidden="true"></span><div><b>Dirección</b>Calle Velázquez 157, 28002, Madrid</div></li>
+          </ul>
+        </div>
+        <form class="contact-form" id="contact-form">
+          <div class="field-row">
+            <div><label for="fname">Nombre</label><input id="fname" name="fname" required></div>
+            <div><label for="lname">Apellidos</label><input id="lname" name="lname" required></div>
+          </div>
+          <div><label for="email">Email</label><input id="email" type="email" name="email" required></div>
+          <div><label for="msg">Mensaje</label><textarea id="msg" name="msg" rows="4" required></textarea></div>
+          <button class="btn btn-gold" type="submit" style="justify-self:start;">Enviar mensaje</button>
+          <p id="contact-status" role="status"></p>
+          <p class="form-note">Al enviar este formulario aceptas nuestra <a href="#">política de privacidad</a>. Este formulario es una simulación (mock) para la prueba técnica; no envía datos a ningún servidor.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site">
+    <div class="wrap">
+      <div class="foot-row">
+        <div class="foot-logo"><span class="cross white" aria-hidden="true"></span> eumedical</div>
+        <div class="foot-links">
+          <div>
+            <h3>Servicios</h3>
+            <a href="#servicios">Teleconsulta 24/7</a>
+            <a href="#servicios">Médicos a domicilio</a>
+            <a href="#servicios">Fit to fly</a>
+          </div>
+          <div>
+            <h3>Compañía</h3>
+            <a href="#nosotros">Sobre nosotros</a>
+            <a href="#contacto">Contacto</a>
+            <a href="#" id="open-patient-footer">Área paciente</a>
+          </div>
+          <div>
+            <h3>Legal</h3>
+            <a href="#">Términos y condiciones</a>
+            <a href="#">Política de privacidad</a>
+          </div>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 eumedical. Todos los derechos reservados.</span>
+        <span>Rediseño — Frontend &amp; UX Trainee Challenge</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ================= PATIENT AREA (Part B) ================= -->
+<div id="patient-view">
+  <div class="app-shell">
+    <aside class="app-side">
+      <div class="app-logo"><span class="cross white" aria-hidden="true"></span> eumedical</div>
+      <nav class="app-nav" aria-label="Navegación del área paciente">
+        <button data-panel="dashboard" class="active" type="button"><span class="ic"></span>Inicio</button>
+        <button data-panel="consultas" type="button"><span class="ic"></span>Consultas</button>
+        <button data-panel="historial" type="button"><span class="ic"></span>Historial</button>
+        <button data-panel="documentos" type="button"><span class="ic"></span>Documentos</button>
+        <button data-panel="recetas" type="button"><span class="ic"></span>Recetas</button>
+        <button data-panel="perfil" type="button"><span class="ic"></span>Perfil y soporte</button>
+      </nav>
+      <div class="app-exit">
+        <button id="close-patient" type="button">← Volver al sitio</button>
+      </div>
+    </aside>
+
+    <main class="app-main">
+      <div class="app-top">
+        <h1 id="app-title">Hola, María</h1>
+        <div class="app-avatar" aria-hidden="true">M</div>
+      </div>
+
+      <!-- DASHBOARD -->
+      <section class="panel active" id="panel-dashboard">
+        <div class="next-appt">
+          <div>
+            <p class="eyebrow">PRÓXIMA CONSULTA</p>
+            <h2>Hoy · 18:30 con Dra. Martínez</h2>
+            <p>Medicina general · Videoconsulta</p>
+          </div>
+          <a class="btn btn-gold" href="#" style="white-space:nowrap;">Unirse a la videoconsulta</a>
+        </div>
+        <div class="quick-grid">
+          <div class="quick-card"><b>2</b><span>Consultas próximas</span></div>
+          <div class="quick-card"><b>1</b><span>Receta activa</span></div>
+          <div class="quick-card"><b>3</b><span>Informes disponibles</span></div>
+        </div>
+        <div class="section-head" style="margin-bottom:16px;">
+          <h2 style="font-size:1.5rem;">Accesos rápidos</h2>
+        </div>
+        <div class="quick-grid">
+          <button class="quick-card" type="button" data-goto="consultas" style="text-align:left; border:1px solid var(--mist); cursor:pointer;"><b style="font-size:1.05rem;">Reservar cita</b><span>Elige médico y horario</span></button>
+          <button class="quick-card" type="button" data-goto="documentos" style="text-align:left; border:1px solid var(--mist); cursor:pointer;"><b style="font-size:1.05rem;">Ver informes</b><span>Descarga tus documentos médicos</span></button>
+          <button class="quick-card" type="button" data-goto="perfil" style="text-align:left; border:1px solid var(--mist); cursor:pointer;"><b style="font-size:1.05rem;">Contactar soporte</b><span>Estamos disponibles 24/7</span></button>
+        </div>
+      </section>
+
+      <!-- CONSULTAS -->
+      <section class="panel" id="panel-consultas">
+        <div class="section-head"><p class="eyebrow">CONSULTAS</p><h2 style="font-size:1.5rem;">Próximas consultas</h2></div>
+        <div class="list-row">
+          <span class="dot-status"></span>
+          <div><h3>Dra. Martínez · Medicina general</h3><p>Hoy · 18:30 · Videoconsulta</p></div>
+          <a class="btn btn-gold" href="#" style="padding:9px 18px; font-size:.92rem;">Unirse</a>
+        </div>
+        <div class="list-row">
+          <span class="dot-status"></span>
+          <div><h3>Dr. Rossi · Dermatología</h3><p>Jueves 24 sept · 10:00 · Videoconsulta</p></div>
+          <span class="tag">Confirmada</span>
+        </div>
+        <div class="section-head" style="margin:32px 0 16px;"><h2 style="font-size:1.5rem;">Historial reciente</h2></div>
+        <div class="list-row">
+          <span class="dot-status past"></span>
+          <div><h3>Dra. Martínez · Medicina general</h3><p>3 sept · Consulta finalizada</p></div>
+          <span class="tag">Ver resumen</span>
+        </div>
+      </section>
+
+      <!-- HISTORIAL -->
+      <section class="panel" id="panel-historial">
+        <div class="section-head"><p class="eyebrow">HISTORIAL</p><h2 style="font-size:1.5rem;">Tus consultas pasadas</h2></div>
+        <div class="list-row"><span class="dot-status past"></span><div><h3>Medicina general · Dra. Martínez</h3><p>3 septiembre 2026</p></div><span class="tag">Resumen</span></div>
+        <div class="list-row"><span class="dot-status past"></span><div><h3>Dermatología · Dr. Rossi</h3><p>18 julio 2026</p></div><span class="tag">Resumen</span></div>
+        <div class="list-row"><span class="dot-status past"></span><div><h3>Fit to fly · Central operativa</h3><p>2 mayo 2026</p></div><span class="tag">Resumen</span></div>
+      </section>
+
+      <!-- DOCUMENTOS -->
+      <section class="panel" id="panel-documentos">
+        <div class="section-head"><p class="eyebrow">DOCUMENTOS</p><h2 style="font-size:1.5rem;">Informes médicos</h2></div>
+        <div class="list-row"><span class="cross" aria-hidden="true"></span><div><h3>Informe consulta general</h3><p>3 septiembre 2026 · PDF</p></div><span class="tag">Descargar</span></div>
+        <div class="list-row"><span class="cross" aria-hidden="true"></span><div><h3>Resultado analítica</h3><p>20 agosto 2026 · PDF</p></div><span class="tag">Descargar</span></div>
+        <div class="list-row"><span class="cross" aria-hidden="true"></span><div><h3>Certificado fit to fly</h3><p>2 mayo 2026 · PDF</p></div><span class="tag">Descargar</span></div>
+      </section>
+
+      <!-- RECETAS -->
+      <section class="panel" id="panel-recetas">
+        <div class="section-head"><p class="eyebrow">RECETAS</p><h2 style="font-size:1.5rem;">Tus prescripciones</h2></div>
+        <div class="list-row"><span class="cross" aria-hidden="true"></span><div><h3>Amoxicilina 500mg</h3><p>Prescrita 3 sept 2026 · Dra. Martínez</p></div><span class="tag">Activa</span></div>
+        <div class="list-row"><span class="cross" aria-hidden="true"></span><div><h3>Loratadina 10mg</h3><p>Prescrita 18 jul 2026 · Dr. Rossi</p></div><span class="tag warn">Caducada</span></div>
+        <div class="empty-state" style="margin-top:24px;">
+          <h3>¿Necesitas presentar una receta en farmacia?</h3>
+          <p>Genera un código QR válido para tu farmacia habitual desde cualquier receta activa.</p>
+        </div>
+      </section>
+
+      <!-- PERFIL Y SOPORTE -->
+      <section class="panel" id="panel-perfil">
+        <div class="section-head"><p class="eyebrow">PERFIL</p><h2 style="font-size:1.5rem;">Tus datos</h2></div>
+        <div class="profile-grid">
+          <div><label for="p-name">Nombre completo</label><input id="p-name" value="María Gómez"></div>
+          <div><label for="p-email">Email</label><input id="p-email" value="maria.gomez@example.com"></div>
+          <div><label for="p-phone">Teléfono</label><input id="p-phone" value="+34 600 000 000"></div>
+          <div><label for="p-lang">Idioma preferido</label><input id="p-lang" value="Español"></div>
+        </div>
+        <div class="section-head" style="margin:32px 0 16px;"><h2 style="font-size:1.5rem;">Soporte</h2></div>
+        <div class="list-row"><span class="cross" aria-hidden="true"></span><div><h3>Central operativa médica 24/7</h3><p>business@eumedical.es · +34 919 22 78 10</p></div><span class="tag">Disponible</span></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ---- Site <-> Patient area toggle ----
+  var body = document.body;
+  function openPatient(){ body.classList.add('show-patient'); window.scrollTo(0,0); history.replaceState(null,'', '#paciente'); }
+  function closePatient(){ body.classList.remove('show-patient'); window.scrollTo(0,0); history.replaceState(null,'', '#top'); }
+  document.getElementById('open-patient').addEventListener('click', openPatient);
+  document.getElementById('open-patient-footer').addEventListener('click', function(e){ e.preventDefault(); openPatient(); });
+  document.getElementById('close-patient').addEventListener('click', closePatient);
+  if(location.hash === '#paciente'){ openPatient(); }
+
+  // ---- Patient area panel switching ----
+  var navButtons = document.querySelectorAll('.app-nav button[data-panel]');
+  var titles = {
+    dashboard:'Hola, María', consultas:'Consultas', historial:'Historial de consultas',
+    documentos:'Documentos médicos', recetas:'Recetas y prescripciones', perfil:'Perfil y soporte'
+  };
+  function showPanel(name){
+    document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+    document.getElementById('panel-'+name).classList.add('active');
+    navButtons.forEach(function(b){ b.classList.toggle('active', b.dataset.panel === name); });
+    document.getElementById('app-title').textContent = titles[name] || '';
+  }
+  navButtons.forEach(function(btn){
+    btn.addEventListener('click', function(){ showPanel(btn.dataset.panel); });
+  });
+  document.querySelectorAll('[data-goto]').forEach(function(btn){
+    btn.addEventListener('click', function(){ showPanel(btn.dataset.goto); });
+  });
+
+  // ---- Mobile nav ----
+  var burger = document.getElementById('burger-btn');
+  burger.addEventListener('click', function(){
+    var nav = document.querySelector('nav.primary');
+    var open = nav.style.display === 'flex';
+    nav.style.cssText = open ? '' : 'display:flex; position:absolute; top:76px; left:0; right:0; background:#fff; flex-direction:column; padding:20px var(--edge); gap:18px; border-bottom:1px solid var(--mist);';
+    burger.setAttribute('aria-expanded', String(!open));
+  });
+
+  // ---- Mock contact form ----
+  document.getElementById('contact-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('contact-status').textContent = 'Gracias, hemos recibido tu mensaje (simulación — sin backend real).';
+    e.target.reset();
+  });
+})();
+</script>
+</body>
+</html>

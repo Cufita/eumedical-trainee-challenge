@@ -1,0 +1,27 @@
+/* Brand tokens — Eumedical Brand Book, sept. 2021. Ported 1:1 from design-reference.html. */
+@theme {
+  --color-navy: #1e4865;
+  --color-navy-2: #153549;
+  --color-sage: #79b19c;
+  --color-sage-deep: #2f6653;
+  --color-sage-pale: #bfd7cd;
+  --color-mist: #e8eeec;
+  --color-cloud: #f2f2f2;
+  --color-cream: #f7f1e4;
+  --color-gold: #e79f1a;
+  --color-amber: #efbc0b;
+  --color-ink: #152329;
+  --color-white: #ffffff;
+
+  --font-display: 'Outfit', 'Didact Gothic', sans-serif;
+  --font-label: 'Didact Gothic', sans-serif;
+  --font-body: 'Didact Gothic', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+
+  --radius-pill: 999px;
+  --radius-lg: 28px;
+}
+
+:root {
+  --edge: clamp(32px, 6vw, 64px);
+  --measure: 62ch;
+}

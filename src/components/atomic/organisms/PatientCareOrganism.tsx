@@ -1,0 +1,174 @@
+import { useEffect, useRef, useState } from "react";
+import { Container } from "../../shared/Container";
+import { SectionEyebrow } from "../atoms/SectionEyebrow";
+import { PatientCareCaption } from "../molecules/PatientCareCaption";
+import { PatientCareVideoCard } from "../molecules/PatientCareVideoCard";
+import { patientCareSlides } from "../molecules/patientCareSlides";
+
+// How much extra scroll (px) each slide transition consumes once pinned.
+// Kept generous so a single scroll gesture only nudges the animation a
+// little, giving the text time to sit fully legible before it starts
+// fading for the next slide.
+const SLIDE_SCROLL_DISTANCE = 1400;
+
+export function PatientCareOrganism() {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(media.matches);
+    const onChange = () => setReducedMotion(media.matches);
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
+  }, []);
+
+  // Continuous scroll-scrub: the section pins while the user scrolls through
+  // an extended-height wrapper, and progress tracks scroll distance 1:1.
+  useEffect(() => {
+    if (reducedMotion) return;
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    let ticking = false;
+    let inView = false;
+
+    const measure = () => {
+      ticking = false;
+      const rect = wrapper.getBoundingClientRect();
+      const scrollable = rect.height - window.innerHeight;
+      if (scrollable <= 0) return;
+      const raw = -rect.top / scrollable;
+      const clamped = Math.min(Math.max(raw, 0), 1);
+      setProgress(clamped * (patientCareSlides.length - 1));
+    };
+
+    const onScroll = () => {
+      if (!inView || ticking) return;
+      ticking = true;
+      requestAnimationFrame(measure);
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+        if (inView) measure();
+      },
+      { threshold: 0 },
+    );
+    observer.observe(wrapper);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [reducedMotion]);
+
+  const wrapperHeight = reducedMotion
+    ? undefined
+    : `calc(100vh + ${(patientCareSlides.length - 1) * SLIDE_SCROLL_DISTANCE}px)`;
+
+  return (
+    <section id="eu-cuidado-pacientes" className="bg-navy px-(--edge) py-20 text-white md:py-24">
+      <Container>
+        <div className="mx-auto max-w-[40em] text-center">
+          <SectionEyebrow light>Cómo cuidamos a tus pacientes</SectionEyebrow>
+          <h2 className="mx-auto mt-3 max-w-[18em] text-[clamp(1.9rem,3.6vw,2.75rem)] leading-[1.14] text-white">
+            Todo lo que tus pacientes necesitan, coordinado por nosotros
+          </h2>
+          <p className="mx-auto mt-4 max-w-[52ch] text-[15.5px] leading-[1.62] text-[#c4d5df]">
+            Desde la primera llamada hasta el seguimiento posterior, cada
+            servicio está pensado para que el paciente se sienta acompañado
+            y el equipo médico cuente con la infraestructura correcta.
+          </p>
+        </div>
+      </Container>
+
+      {/* Desktop: pinned, scroll-scrubbed card stack, centered in the
+          section. The video stays clean (no text overlay) — the caption
+          lives below it in its own dedicated spot and crossfades to match
+          whichever card is currently in front. The sticky box is a full
+          viewport tall so the (smaller) content is truly centered in the
+          middle of the screen — by the time it's pinned, the heading above
+          has already scrolled away, and exiting cards get the full viewport
+          height of travel room before the overflow clips them, instead of
+          hitting a shorter box's edge. */}
+      {!reducedMotion && (
+        <div ref={wrapperRef} className="relative mt-10 hidden lg:block" style={{ height: wrapperHeight }}>
+          <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden">
+            {/* Fixed-size stack box: cards are absolutely positioned inside
+                it so a peeking "next" card is truly clipped to a thin
+                sliver at the bottom edge, never a transparent ghost. */}
+            <div className="relative aspect-[1154/578] w-full max-w-[860px]">
+              {patientCareSlides.map((slide, index) => (
+                <PatientCareVideoCard key={slide.title} slide={slide} local={progress - index} />
+              ))}
+            </div>
+            <div className="relative mt-8 grid min-h-[104px] w-full max-w-[860px] text-center">
+              {patientCareSlides.map((slide, index) => (
+                <PatientCareCaption key={slide.title} slide={slide} index={index} local={progress - index} />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className={`mt-14 flex flex-col gap-16 ${reducedMotion ? "" : "lg:hidden"}`}>
+        {patientCareSlides.map((slide, index) => (
+          <MobilePatientCareSlide key={slide.title} slide={slide} index={index} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function MobilePatientCareSlide({
+  slide,
+  index,
+}: {
+  slide: (typeof patientCareSlides)[number];
+  index: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      setVisible(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className="patient-care-fade" data-visible={visible}>
+      <div className="relative aspect-[1154/578] w-full">
+        <PatientCareVideoCard slide={slide} local={0} />
+      </div>
+      <div className="mt-6 text-center">
+        <span className="font-display text-[12px] tracking-[.08em] text-amber">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+        <h3 className="mt-1.5 text-[clamp(1.3rem,2.2vw,1.75rem)] leading-[1.15] text-white">{slide.title}</h3>
+        <p className="mx-auto mt-2 max-w-[46ch] text-[15px] leading-[1.5] text-[#c4d5df]">{slide.description}</p>
+      </div>
+    </div>
+  );
+}

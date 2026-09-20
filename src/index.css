@@ -1,0 +1,940 @@
+@import "tailwindcss";
+@import "./styles/tokens.css";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-[#f7f7f4] text-ink;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    margin: 0;
+    @apply text-navy;
+  }
+  p {
+    margin: 0;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  button {
+    font: inherit;
+    cursor: pointer;
+  }
+  a {
+    @apply text-navy no-underline;
+  }
+  ::selection {
+    background: var(--color-amber);
+    color: var(--color-navy);
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-gold);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-9px);
+    }
+  }
+
+  @layer components {
+    /* iOS 26 "liquid glass" specular sheen — a soft light catch across the
+       upper half of the surface plus a crisp inner rim, layered under the
+       bar's real children so nav text and buttons stay unobscured. */
+    .liquid-glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: inherit;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.55) 0%,
+        rgba(255, 255, 255, 0.12) 45%,
+        rgba(255, 255, 255, 0) 78%
+      );
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+      pointer-events: none;
+    }
+
+    /* Recurring "+" graphic device from the brand book — reused as a decorative marker
+     everywhere a generic bullet would otherwise go. */
+    .cross {
+      --cross-size: 22px;
+      width: var(--cross-size);
+      height: var(--cross-size);
+      position: relative;
+      flex: none;
+    }
+    .cross::before,
+    .cross::after {
+      content: "";
+      position: absolute;
+      background: var(--color-gold);
+      border-radius: 999px;
+    }
+    .cross::before {
+      left: 38%;
+      top: 0;
+      width: 24%;
+      height: 100%;
+    }
+    .cross::after {
+      top: 38%;
+      left: 0;
+      height: 24%;
+      width: 100%;
+    }
+    .cross.sage::before,
+    .cross.sage::after {
+      background: var(--color-sage);
+    }
+    .cross.white::before,
+    .cross.white::after {
+      background: var(--color-white);
+    }
+
+    /* Ring of tokens (flags / language words) that orbits a stat badge on
+       hover, each item held at --radius from center and rotated to face
+       outward, the whole ring spinning continuously while shown. */
+    .spinning-ring {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(0.82);
+      transition:
+        opacity 320ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .group:hover .spinning-ring {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .spinning-ring-track {
+      position: relative;
+      width: 1px;
+      height: 1px;
+      animation: spin-ring var(--spin-duration, 16s) linear infinite;
+      animation-play-state: paused;
+    }
+    .group:hover .spinning-ring-track {
+      animation-play-state: running;
+    }
+    .spinning-ring-item {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: 0 0;
+      transform: rotate(var(--angle)) translateY(calc(var(--radius) * -1)) translateX(-50%);
+      white-space: nowrap;
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--color-gold);
+    }
+    @keyframes spin-ring {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .spinning-ring-track {
+        animation: none;
+      }
+    }
+
+    /* Testimonial carousel — outgoing/incoming cards share a single grid
+       cell and slide past each other in the direction the visitor picked
+       (next slides in from the right, previous from the left) instead of
+       the layout jumping or fading in place. */
+    .testimonial-stage {
+      display: grid;
+    }
+    .testimonial-pane {
+      grid-area: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .testimonial-pane--enter-right {
+      animation: testimonial-enter-right 640ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .testimonial-pane--enter-left {
+      animation: testimonial-enter-left 640ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .testimonial-pane--exit-left {
+      animation: testimonial-exit-left 640ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .testimonial-pane--exit-right {
+      animation: testimonial-exit-right 640ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes testimonial-enter-right {
+      from {
+        opacity: 0;
+        transform: translate3d(48px, 0, 0);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+    @keyframes testimonial-enter-left {
+      from {
+        opacity: 0;
+        transform: translate3d(-48px, 0, 0);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+    @keyframes testimonial-exit-left {
+      from {
+        opacity: 1;
+        transform: none;
+      }
+      to {
+        opacity: 0;
+        transform: translate3d(-48px, 0, 0);
+      }
+    }
+    @keyframes testimonial-exit-right {
+      from {
+        opacity: 1;
+        transform: none;
+      }
+      to {
+        opacity: 0;
+        transform: translate3d(48px, 0, 0);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .testimonial-pane--enter-right,
+      .testimonial-pane--enter-left,
+      .testimonial-pane--exit-left,
+      .testimonial-pane--exit-right {
+        animation: none;
+      }
+    }
+
+    /* Skeleton loading placeholder (Instagram/Facebook/X style): flat gray
+       blocks shaped like the page that's about to render, swept by a soft
+       shimmer highlight — no logo, no copy, just "content is on its way". */
+    .skeleton {
+      position: relative;
+      overflow: hidden;
+      background: var(--color-mist);
+    }
+    .skeleton::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+      animation: skeleton-shimmer 1.6s ease-in-out infinite;
+    }
+    @keyframes skeleton-shimmer {
+      100% {
+        transform: translateX(100%);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .skeleton::after {
+        animation: none;
+        display: none;
+      }
+    }
+
+    /* Centered "page is loading" dots, layered over the skeleton — the
+       animated indicator apps like Instagram/Facebook/X show in the middle
+       of the screen while the real layout is still on its way in. */
+    .loading-dots {
+      display: flex;
+      gap: 10px;
+    }
+    .loading-dots span {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--color-navy);
+      opacity: 0.35;
+      animation: loading-dot-bounce 1s ease-in-out infinite both;
+    }
+    .loading-dots span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+    .loading-dots span:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+    @keyframes loading-dot-bounce {
+      0%,
+      80%,
+      100% {
+        transform: scale(0.6);
+        opacity: 0.35;
+      }
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .loading-dots span {
+        animation: none;
+        opacity: 0.7;
+      }
+    }
+
+    /* Active testimonial dot fills like a loading bar over the autoplay
+       interval; reaching full width is what triggers the next slide, so the
+       animation duration must stay in sync with TestimonialCarousel's
+       AUTOPLAY_MS. Pausing (hover/focus) freezes it via animation-play-state
+       rather than resetting it, so progress isn't lost. */
+    .testimonial-dot-fill {
+      position: absolute;
+      inset: 0;
+      transform-origin: left;
+      transform: scaleX(0);
+      border-radius: 9999px;
+      background: var(--color-navy);
+      animation-name: testimonial-dot-fill;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+    }
+    @keyframes testimonial-dot-fill {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .testimonial-dot-fill {
+        animation: none;
+      }
+    }
+
+    .pulse {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--color-sage-deep);
+      position: relative;
+      flex: none;
+    }
+    .pulse::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 999px;
+      border: 2px solid var(--color-sage-deep);
+      animation: pulse 2.2s ease-out infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pulse::after {
+        animation: none;
+      }
+    }
+
+    /* Services bento grid — a cursor-tracked spotlight (magicui's Magic
+       Card) and a spring-eased icon under a blur/opacity reveal bring each
+       tile's detail forward on hover or keyboard focus. The description
+       stays in the a11y tree at all times; only its emphasis animates, and
+       the reveal itself is scoped to fine-pointer devices below, so touch
+       visitors simply read every description in place. */
+    .service-tile::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: inherit;
+      background: radial-gradient(
+        240px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+        rgba(231, 159, 26, 0.14),
+        transparent 68%
+      );
+      opacity: 0;
+      transition: opacity 420ms cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .service-tile.is-navy::before {
+      background: radial-gradient(
+        240px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+        rgba(255, 255, 255, 0.16),
+        transparent 68%
+      );
+    }
+    .service-tile:hover::before,
+    .service-tile:focus-visible::before {
+      opacity: 1;
+    }
+    .service-tile-icon {
+      transition: transform 480ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .service-tile:hover .service-tile-icon,
+    .service-tile:focus-visible .service-tile-icon {
+      transform: translateY(-2px) scale(1.08);
+    }
+    .service-tile-watermark {
+      transform: rotate(-20deg);
+    }
+
+    /* Per-service icon "acts" — each service gets its own hover/focus
+       gesture (recording, a check being drawn, a scan sweep…) rather than
+       one generic effect repeated across every tile. All of them are inert
+       until :hover/:focus-visible and stop under prefers-reduced-motion. */
+
+    /* Fit to Fly badge — the plane climbs up and to the right, while two
+       lines trail out from its center toward the bottom-left corner: the
+       wake left behind, directly opposite the climb — the same "trail
+       opposite of travel" logic as Ambulancias, just on the diagonal the
+       plane is actually climbing along instead of a straight line. */
+    .service-tile:hover .service-tile-icon.motion-fly svg,
+    .service-tile:focus-visible .service-tile-icon.motion-fly svg {
+      animation: icon-fly-climb 1400ms ease-in-out infinite;
+    }
+    .service-icon-fly-lines {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      pointer-events: none;
+    }
+    .service-icon-fly-lines span {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 12px;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+      opacity: 0;
+      transform-origin: left center;
+      transform: rotate(160deg);
+    }
+    .service-icon-fly-lines span:nth-child(2) {
+      top: -4px;
+      left: 1px;
+      width: 8px;
+      animation-delay: 140ms;
+    }
+    .service-tile:hover .service-icon-fly-lines span,
+    .service-tile:focus-visible .service-icon-fly-lines span {
+      animation-name: icon-fly-line;
+      animation-duration: 700ms;
+      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      animation-iteration-count: infinite;
+    }
+    @keyframes icon-fly-climb {
+      0%,
+      100% {
+        transform: translate(0, 0);
+      }
+      50% {
+        transform: translate(3px, -4px);
+      }
+    }
+    @keyframes icon-fly-line {
+      0% {
+        opacity: 0;
+        transform: rotate(160deg) translate(8px, 0);
+      }
+      35% {
+        opacity: 0.6;
+      }
+      100% {
+        opacity: 0;
+        transform: rotate(160deg) translate(22px, 0);
+      }
+    }
+
+    /* Videoconsulta 24/7 — a rec dot lights up and pulses, like a call
+       going live. */
+    .service-icon-rec-dot {
+      position: absolute;
+      top: -1px;
+      right: -1px;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--color-gold);
+      opacity: 0;
+      transform: scale(0.6);
+      transition:
+        opacity 220ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .service-icon-rec-dot::after {
+      content: "";
+      position: absolute;
+      inset: -5px;
+      border-radius: 999px;
+      border: 1.5px solid var(--color-gold);
+      opacity: 0;
+    }
+    .service-tile:hover .service-icon-rec-dot,
+    .service-tile:focus-visible .service-icon-rec-dot {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .service-tile:hover .service-icon-rec-dot::after,
+    .service-tile:focus-visible .service-icon-rec-dot::after {
+      animation: icon-rec-ring 1400ms ease-out infinite;
+    }
+    @keyframes icon-rec-ring {
+      0% {
+        opacity: 0.55;
+        transform: scale(0.6);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.6);
+      }
+    }
+
+    /* Rondas médicas — a heart-monitor blip sweeps under the stethoscope. */
+    .service-icon-trace {
+      position: absolute;
+      left: 50%;
+      bottom: -7px;
+      width: 30px;
+      height: 11px;
+      transform: translateX(-50%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 260ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .service-icon-trace path {
+      stroke-dasharray: 64;
+      stroke-dashoffset: 64;
+    }
+    .service-tile:hover .service-icon-trace,
+    .service-tile:focus-visible .service-icon-trace {
+      opacity: 0.9;
+    }
+    .service-tile:hover .service-icon-trace path,
+    .service-tile:focus-visible .service-icon-trace path {
+      animation: icon-trace-draw 1600ms cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    }
+    @keyframes icon-trace-draw {
+      0% {
+        stroke-dashoffset: 64;
+      }
+      55% {
+        stroke-dashoffset: 0;
+      }
+      100% {
+        stroke-dashoffset: -64;
+      }
+    }
+
+    /* Ambulancias — centered at rest; on hover it rocks forward (and back
+       to center) while speed lines trail inside the badge, to its left.
+       Contained by the badge's own circle: nothing pokes outside it. */
+    .service-tile-icon.motion-speed {
+      overflow: hidden;
+    }
+    .service-tile:hover .service-tile-icon.motion-speed svg,
+    .service-tile:focus-visible .service-tile-icon.motion-speed svg {
+      animation: icon-speed-wobble 900ms ease-in-out infinite;
+    }
+    .service-icon-speed-lines {
+      position: absolute;
+      left: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .service-icon-speed-lines span {
+      display: block;
+      width: 5px;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+      opacity: 0;
+    }
+    .service-icon-speed-lines span:nth-child(1) {
+      width: 4px;
+    }
+    .service-icon-speed-lines span:nth-child(2) {
+      width: 6px;
+      animation-delay: 120ms;
+    }
+    .service-icon-speed-lines span:nth-child(3) {
+      width: 3px;
+      animation-delay: 240ms;
+    }
+    .service-tile:hover .service-icon-speed-lines span,
+    .service-tile:focus-visible .service-icon-speed-lines span {
+      animation-name: icon-speed-line;
+      animation-duration: 900ms;
+      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      animation-iteration-count: infinite;
+    }
+    @keyframes icon-speed-wobble {
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+      50% {
+        transform: translateX(4px);
+      }
+    }
+    @keyframes icon-speed-line {
+      0% {
+        opacity: 0;
+        transform: translateX(3px);
+      }
+      35% {
+        opacity: 0.6;
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(-4px);
+      }
+    }
+
+    /* Segunda opinión — a check draws itself directly onto the clipboard's
+       paper, in the icon's own color, confirming the diagnosis. */
+    .service-icon-check {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .service-icon-check path {
+      stroke-dasharray: 15;
+      stroke-dashoffset: 15;
+      transition: stroke-dashoffset 420ms cubic-bezier(0.16, 1, 0.3, 1) 100ms;
+    }
+    .service-tile:hover .service-icon-check path,
+    .service-tile:focus-visible .service-icon-check path {
+      stroke-dashoffset: 0;
+    }
+
+    /* Escolta médica — a double heartbeat thump. */
+    .service-tile:hover .service-tile-icon.motion-thump svg,
+    .service-tile:focus-visible .service-tile-icon.motion-thump svg {
+      animation: icon-thump 1100ms ease-in-out infinite;
+    }
+    @keyframes icon-thump {
+      0%,
+      100% {
+        transform: scale(1);
+      }
+      20% {
+        transform: scale(1.16);
+      }
+      35% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      65% {
+        transform: scale(1);
+      }
+    }
+
+    /* Auditoría médica — a light sweep scans the shield. */
+    .service-tile-icon.motion-scan {
+      overflow: hidden;
+    }
+    .service-tile-icon.motion-scan::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        115deg,
+        transparent 40%,
+        rgba(255, 255, 255, 0.65) 50%,
+        transparent 60%
+      );
+      transform: translateX(-120%);
+      pointer-events: none;
+    }
+    .service-tile:hover .service-tile-icon.motion-scan::after,
+    .service-tile:focus-visible .service-tile-icon.motion-scan::after {
+      animation: icon-scan 1500ms linear infinite;
+    }
+    @keyframes icon-scan {
+      to {
+        transform: translateX(120%);
+      }
+    }
+
+    /* Apoyo sociosanitario — a soft presence ring breathes outward. */
+    .service-tile-icon.motion-glow-ring::before {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 999px;
+      border: 1.5px solid currentColor;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .service-tile:hover .service-tile-icon.motion-glow-ring::before,
+    .service-tile:focus-visible .service-tile-icon.motion-glow-ring::before {
+      animation: icon-glow-ring 1600ms ease-out infinite;
+    }
+    @keyframes icon-glow-ring {
+      0% {
+        opacity: 0.5;
+        transform: scale(0.85);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.35);
+      }
+    }
+
+    /* Coordinación hospitalaria — a coordination ping radiates outward. */
+    .service-tile-icon.motion-radar::before,
+    .service-tile-icon.motion-radar::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      border: 1.5px solid currentColor;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .service-tile:hover .service-tile-icon.motion-radar::before,
+    .service-tile:focus-visible .service-tile-icon.motion-radar::before {
+      animation: icon-radar 1800ms cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+    .service-tile:hover .service-tile-icon.motion-radar::after,
+    .service-tile:focus-visible .service-tile-icon.motion-radar::after {
+      animation: icon-radar 1800ms cubic-bezier(0.16, 1, 0.3, 1) infinite 600ms;
+    }
+    @keyframes icon-radar {
+      0% {
+        opacity: 0.5;
+        transform: scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.7);
+      }
+    }
+
+    /* Centro de operaciones 24/7 — a small audio equalizer listens in,
+       like a chat "typing" indicator perched at the badge's bottom-right
+       corner: just outside the circle, but tall enough to reach back up
+       over it too. */
+    .service-icon-eq {
+      position: absolute;
+      right: 3px;
+      bottom: 2px;
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 12px;
+      pointer-events: none;
+    }
+    .service-icon-eq span {
+      display: block;
+      width: 2.5px;
+      height: 100%;
+      border-radius: 999px;
+      background: currentColor;
+      opacity: 0;
+      transform: scaleY(0.3);
+      transform-origin: bottom;
+    }
+    .service-icon-eq span:nth-child(2) {
+      animation-delay: 180ms;
+    }
+    .service-icon-eq span:nth-child(3) {
+      animation-delay: 90ms;
+    }
+    .service-tile:hover .service-icon-eq span,
+    .service-tile:focus-visible .service-icon-eq span {
+      opacity: 0.8;
+      animation-name: icon-eq;
+      animation-duration: 900ms;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+    }
+    @keyframes icon-eq {
+      0%,
+      100% {
+        transform: scaleY(0.3);
+      }
+      50% {
+        transform: scaleY(1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .service-tile::before,
+      .service-tile-icon {
+        transition: none;
+      }
+      .service-tile:hover .service-tile-icon.motion-fly svg,
+      .service-tile:focus-visible .service-tile-icon.motion-fly svg,
+      .service-tile:hover .service-icon-fly-lines span,
+      .service-tile:focus-visible .service-icon-fly-lines span,
+      .service-tile:hover .service-icon-rec-dot::after,
+      .service-tile:focus-visible .service-icon-rec-dot::after,
+      .service-tile:hover .service-icon-trace path,
+      .service-tile:focus-visible .service-icon-trace path,
+      .service-tile:hover .service-tile-icon.motion-speed svg,
+      .service-tile:focus-visible .service-tile-icon.motion-speed svg,
+      .service-tile:hover .service-icon-speed-lines span,
+      .service-tile:focus-visible .service-icon-speed-lines span,
+      .service-tile:hover .service-tile-icon.motion-thump svg,
+      .service-tile:focus-visible .service-tile-icon.motion-thump svg,
+      .service-tile:hover .service-tile-icon.motion-scan::after,
+      .service-tile:focus-visible .service-tile-icon.motion-scan::after,
+      .service-tile:hover .service-tile-icon.motion-glow-ring::before,
+      .service-tile:focus-visible .service-tile-icon.motion-glow-ring::before,
+      .service-tile:hover .service-tile-icon.motion-radar::before,
+      .service-tile:focus-visible .service-tile-icon.motion-radar::before,
+      .service-tile:hover .service-tile-icon.motion-radar::after,
+      .service-tile:focus-visible .service-tile-icon.motion-radar::after,
+      .service-tile:hover .service-icon-eq span,
+      .service-tile:focus-visible .service-icon-eq span {
+        animation: none;
+      }
+      .service-tile:hover .service-icon-eq span,
+      .service-tile:focus-visible .service-icon-eq span {
+        opacity: 0.8;
+        transform: scaleY(0.7);
+      }
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 0;
+      z-index: 200;
+      @apply bg-navy text-white rounded-br-[8px];
+      padding: 12px 20px;
+    }
+    .skip-link:focus {
+      left: 0;
+    }
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(0.5);
+      opacity: 0.9;
+    }
+  }
+
+  @keyframes showcase-frame-in {
+    from {
+      transform: scale(1.045);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes lightbox-backdrop-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes lightbox-panel-in {
+    from {
+      opacity: 0;
+      transform: scale(0.94) translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes patient-care-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @layer components {
+    /* "Cómo funciona" showcase — each incoming screenshot eases in from a
+       faint zoom so the reel reads as one continuous shot, not a hard cut. */
+    .showcase-frame {
+      animation: showcase-frame-in 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    /* "Cómo funciona" lightbox — the panel scales in from just below full
+       size so opening reads as a zoom toward the screenshot, not a cut. */
+    .lightbox-backdrop {
+      animation: lightbox-backdrop-in 260ms ease-out both;
+    }
+    .lightbox-panel {
+      animation: lightbox-panel-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    /* Mobile "Cómo cuidamos a tus pacientes" — no scroll-pin on small
+       screens, so each slide just settles in as it enters the viewport. */
+    .patient-care-fade {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+    .patient-care-fade[data-visible="true"] {
+      animation: patient-care-fade-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .showcase-frame,
+      .lightbox-backdrop,
+      .lightbox-panel {
+        animation: none;
+      }
+
+      .patient-care-fade,
+      .patient-care-fade[data-visible="true"] {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
+    }
+  }
+}

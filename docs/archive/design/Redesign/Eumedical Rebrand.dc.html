@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics=""><script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.184.0/build/three.module.js",
+    "three/addons/controls/OrbitControls.js": "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js"
+  },
+  "integrity": {
+    "https://unpkg.com/three@0.184.0/build/three.module.js": "sha384-8FCZ1eVO6it4+pbec2aDtnTrwjWXZLJRC+MAGCIPDgsYnUrl/E0A2YlF8ioMKI/J",
+    "https://unpkg.com/three@0.184.0/build/three.core.js": "sha384-dw2ooPewaEIrAgl6oFDBmmBWCE9oW9LxRGcfwZ0hLvEprzo202wXl7vCYHRlSnOT",
+    "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js": "sha384-4rziNxOBZKQ69i+w+f89KJ55TCYquwchVbByQwmaOeIOXdOU2PLDn3kOfXHwIJC9"
+  }
+}
+</script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;family=Didact+Gothic&amp;display=swap" rel="stylesheet"><style>
+*{box-sizing:border-box}
+body{margin:0;background:#f7f7f4;color:#1e4865;font-family:'Didact Gothic',Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#1e4865;text-decoration:none}
+a:hover{color:#b4840a}
+::selection{background:#efbc0b;color:#1e4865}
+:focus-visible{outline:3px solid #efbc0b;outline-offset:3px;border-radius:6px}
+@keyframes eu-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes eu-float2{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+@keyframes eu-pulse{0%{box-shadow:0 0 0 0 rgba(239,188,11,.6)}70%{box-shadow:0 0 0 13px rgba(239,188,11,0)}100%{box-shadow:0 0 0 0 rgba(239,188,11,0)}}
+@keyframes eu-shimmer{0%{background-position:-420px 0}100%{background-position:420px 0}}
+@keyframes eu-dash{to{stroke-dashoffset:-22}}
+@keyframes eu-marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+#eu-brands:hover #eu-brand-track{animation-play-state:paused}
+@keyframes eu-node{0%,100%{r:4}50%{r:6.5}}
+@media (max-width:900px){#eu-desknav{display:none!important}#eu-burger{display:flex!important}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
+</style></helmet>
+<div style="overflow-x:hidden;background:#f7f7f4">
+
+<header id="eu-header" style="position:fixed;top:0;left:0;right:0;z-index:60;padding:22px 0;transition:padding .35s cubic-bezier(.2,.7,.2,1),background .35s,box-shadow .35s">
+<div style="max-width:1200px;margin:0 auto;padding:0 32px;display:flex;align-items:center;gap:32px">
+<a href="#eu-top" aria-label="Eumedical" style="display:flex;align-items:center;gap:7px;flex:none">
+<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg>
+<span style="font-family:Outfit,sans-serif;font-weight:600;font-size:20px;letter-spacing:-.02em;color:#1e4865">eumedical</span>
+</a>
+<nav id="eu-desknav" aria-label="Principal" style="margin:0 auto;display:flex;align-items:center;gap:34px">
+<a href="#eu-servicios" data-en="Services" style="font-size:14.5px;color:#2c5873;transition:color .2s">Servicios</a>
+<a href="#eu-como" data-en="How it works" style="font-size:14.5px;color:#2c5873;transition:color .2s">Cómo funciona</a>
+<a href="#eu-cobertura" data-en="Coverage" style="font-size:14.5px;color:#2c5873;transition:color .2s">Cobertura</a>
+<a href="#eu-nosotros" data-en="About us" style="font-size:14.5px;color:#2c5873;transition:color .2s">Nosotros</a>
+</nav>
+<div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+<div role="group" aria-label="Idioma" style="display:flex;align-items:center;gap:2px;background:rgba(30,72,101,.08);border-radius:999px;padding:3px">
+<button id="eu-lang-en" type="button" aria-pressed="false" style="border:0;cursor:pointer;font-family:'Didact Gothic',sans-serif;font-size:12.5px;letter-spacing:.06em;width:34px;height:28px;border-radius:999px;background:transparent;color:#2c5873;transition:background .25s,color .25s">IN</button>
+<button id="eu-lang-es" type="button" aria-pressed="true" style="border:0;cursor:pointer;font-family:'Didact Gothic',sans-serif;font-size:12.5px;letter-spacing:.06em;width:34px;height:28px;border-radius:999px;background:#1e4865;color:#ffffff;transition:background .25s,color .25s">ES</button>
+</div>
+<button id="eu-burger" type="button" aria-label="Menú" aria-expanded="false" style="display:none;border:0;background:rgba(30,72,101,.08);border-radius:11px;width:40px;height:40px;cursor:pointer;color:#1e4865;align-items:center;justify-content:center;flex:none"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"></path></svg></button>
+</div>
+</div>
+<div id="eu-mobnav" style="display:none;max-width:1200px;margin:0 auto;padding:0 32px">
+<div style="margin-top:14px;background:#ffffff;border:1px solid rgba(30,72,101,.1);border-radius:16px;padding:8px;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(30,72,101,.14)">
+<a href="#eu-servicios" data-en="Services" style="font-size:15.5px;padding:12px 14px;border-radius:11px">Servicios</a>
+<a href="#eu-como" data-en="How it works" style="font-size:15.5px;padding:12px 14px;border-radius:11px">Cómo funciona</a>
+<a href="#eu-cobertura" data-en="Coverage" style="font-size:15.5px;padding:12px 14px;border-radius:11px">Cobertura</a>
+<a href="#eu-nosotros" data-en="About us" style="font-size:15.5px;padding:12px 14px;border-radius:11px">Nosotros</a>
+</div>
+</div>
+</header>
+
+<main id="eu-top">
+
+
+
+<section style="position:relative;background:#f7f7f4;padding:132px 0 0;overflow:hidden">
+<svg viewBox="0 0 24 24" width="230" height="230" aria-hidden="true" style="position:absolute;left:-74px;top:36px;opacity:.5"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#e6e6e0"></path></svg>
+<div style="max-width:1200px;margin:0 auto;padding:0 32px;position:relative">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:40px;align-items:center;min-height:430px">
+<div style="position:relative;z-index:2">
+<h1 data-stagger="" data-en="Healthcare without borders" style="font-family:Outfit,sans-serif;font-weight:500;font-size:clamp(38px,4.6vw,58px);line-height:1.06;letter-spacing:-.025em;margin:0;color:#1e4865;text-wrap:balance">Atención médica<br>sin fronteras</h1>
+<p data-stagger="" data-en="Our own medical network, telemedicine and assistance coordination for insurers and companies. We care for your patients wherever they are, in their own language." style="font-size:15.5px;line-height:1.62;color:#3c6480;margin:22px 0 0;max-width:27em;text-wrap:pretty">Red médica propia, telemedicina y coordinación de asistencia para aseguradoras y empresas. Cuidamos de tus pacientes estén donde estén, en su idioma.</p>
+<a data-stagger="" href="#eu-contacto" data-en="Request a demo" style="display:inline-flex;align-items:center;gap:9px;margin-top:30px;font-family:Outfit,sans-serif;font-weight:500;font-size:14.5px;color:#1e4865;background:#efbc0b;padding:13px 22px;border-radius:999px;transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s,background .25s" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(231,159,26,.4);background:#e9b200;color:#1e4865">Solicitar demo<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" style="flex:none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path></svg></a>
+</div>
+<div data-stagger="" style="position:relative;min-height:340px;padding-bottom:56px">
+<div id="eu-map" role="img" aria-label="Globo interactivo con los países donde opera Eumedical" style="width:100%;aspect-ratio:1/1;max-width:560px;margin:0 auto;position:relative;touch-action:none"><div style="position: absolute; left: -29px; background: #1e4865; color: #ffffff; border-radius: 14px; padding: 11px 15px; text-align: center; box-shadow: 0 16px 34px rgba(30,72,101,.26); transition: transform .4s cubic-bezier(.2,.7,.2,1),box-shadow .4s; top: 308px" style-hover="transform:translateY(-8px) scale(1.06);box-shadow:0 24px 46px rgba(30,72,101,.34)">
+<div style="font-family:Outfit,sans-serif;font-weight:600;font-size:19px;color:#e79f1a;line-height:1">80+</div>
+<div data-en="countries" style="font-size:10.5px;letter-spacing:.09em;color:#cfdce5;margin-top:3px">países</div>
+</div></div>
+<div style="position: absolute; top: 27px; background: #1e4865; color: #ffffff; border-radius: 14px; padding: 11px 15px; text-align: center; box-shadow: 0 16px 34px rgba(30,72,101,.26); transition: transform .4s cubic-bezier(.2,.7,.2,1),box-shadow .4s; left: 448px" style-hover="transform:translateY(-8px) scale(1.06);box-shadow:0 24px 46px rgba(30,72,101,.34)">
+<div style="font-family:Outfit,sans-serif;font-weight:600;font-size:19px;color:#e79f1a;line-height:1">10+</div>
+<div data-en="languages" style="font-size:10.5px;letter-spacing:.09em;color:#cfdce5;margin-top:3px">idiomas</div>
+</div>
+
+</div>
+</div>
+</div></section>
+
+<section style="background:#1e4865;color:#ffffff;padding:66px 0 88px">
+<div style="max-width:1200px;margin:0 auto;padding:0 32px">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:0">
+<div data-reveal="" data-delay="0" style="opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);padding:0 24px;border-right:1px solid rgba(255,255,255,.18)">
+<div style="font-family:Outfit,sans-serif;font-weight:300;font-size:clamp(40px,4.6vw,56px);letter-spacing:-.03em;line-height:1"><span data-count="90" data-suffix="k">0</span></div>
+<div data-en="Patients treated" style="font-size:13px;color:#b9cbd8;margin-top:10px">Pacientes atendidos</div>
+</div>
+<div data-reveal="" data-delay="90" style="opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);padding:0 24px;border-right:1px solid rgba(255,255,255,.18)">
+<div style="font-family:Outfit,sans-serif;font-weight:300;font-size:clamp(40px,4.6vw,56px);letter-spacing:-.03em;line-height:1"><span data-count="250">0</span></div>
+<div data-en="Associated doctors" style="font-size:13px;color:#b9cbd8;margin-top:10px">Médicos asociados</div>
+</div>
+<div data-reveal="" data-delay="180" style="opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);padding:0 24px;border-right:1px solid rgba(255,255,255,.18)">
+<div style="font-family:Outfit,sans-serif;font-weight:300;font-size:clamp(40px,4.6vw,56px);letter-spacing:-.03em;line-height:1"><span data-count="80" data-suffix="+">0</span></div>
+<div data-en="Countries covered" style="font-size:13px;color:#b9cbd8;margin-top:10px">Países con cobertura</div>
+</div>
+<div data-reveal="" data-delay="270" style="opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);padding:0 24px">
+<div style="font-family:Outfit,sans-serif;font-weight:300;font-size:clamp(40px,4.6vw,56px);letter-spacing:-.03em;line-height:1">4.9</div>
+<div data-en="Service rating" style="font-size:13px;color:#b9cbd8;margin-top:10px">Valoración de servicio</div>
+</div>
+</div>
+<h2 data-reveal="" data-en="Everything your patients need, coordinated by us" style="opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);font-family:Outfit,sans-serif;font-weight:400;font-size:clamp(27px,3.1vw,38px);line-height:1.18;letter-spacing:-.02em;text-align:center;max-width:17em;margin:82px auto 0;text-wrap:balance">Todo lo que tus pacientes necesitan, coordinado por nosotros</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,232px),1fr));gap:18px;margin-top:44px">
+<article data-reveal="" data-delay="0" style="opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s,border-color .35s,background .35s;background:#22506f;border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:26px 24px 28px" style-hover="transform:translateY(-7px);border-color:#efbc0b;box-shadow:0 22px 44px rgba(0,0,0,.24)">
+<span style="width:42px;height:42px;border-radius:11px;border:1px solid rgba(255,255,255,.24);color:#efbc0b;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"></circle><ellipse cx="12" cy="12" rx="4" ry="9" fill="none" stroke="currentColor" stroke-width="1.7"></ellipse><path d="M3 12h18" stroke="currentColor" stroke-width="1.7"></path></svg></span>
+<h3 data-en="Our own medical network" style="font-family:Outfit,sans-serif;font-weight:500;font-size:16.5px;letter-spacing:-.005em;margin:24px 0 0;color:#ffffff">Red médica propia</h3>
+<p data-en="Verified professionals in over 80 countries and 10 languages, coordinated by our team." style="font-size:13.5px;line-height:1.6;color:#b9cbd8;margin:9px 0 0">Profesionales verificados en más de 80 países y 10 idiomas, coordinados por nuestro equipo.</p>
+</article>
+<article data-reveal="" data-delay="90" style="opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s,border-color .35s,background .35s;background:#22506f;border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:26px 24px 28px" style-hover="transform:translateY(-7px);border-color:#efbc0b;box-shadow:0 22px 44px rgba(0,0,0,.24)">
+<span style="width:42px;height:42px;border-radius:11px;border:1px solid rgba(255,255,255,.24);color:#efbc0b;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.7"></rect><path d="M10.6 5.4h2.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></svg></span>
+<h3 data-en="24/7 digital care" style="font-family:Outfit,sans-serif;font-weight:500;font-size:16.5px;letter-spacing:-.005em;margin:24px 0 0;color:#ffffff">Atención digital 24/7</h3>
+<p data-en="Teleconsultation with a local prescription, available at any time and from anywhere." style="font-size:13.5px;line-height:1.6;color:#b9cbd8;margin:9px 0 0">Teleconsulta con receta local, disponible en cualquier momento y desde cualquier lugar.</p>
+</article>
+<article data-reveal="" data-delay="180" style="opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s,border-color .35s,background .35s;background:#22506f;border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:26px 24px 28px" style-hover="transform:translateY(-7px);border-color:#efbc0b;box-shadow:0 22px 44px rgba(0,0,0,.24)">
+<span style="width:42px;height:42px;border-radius:11px;border:1px solid rgba(255,255,255,.24);color:#efbc0b;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><rect x="2.5" y="5" width="19" height="11.5" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.7"></rect><path d="M6 20h12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></svg></span>
+<h3 data-en="Technology ready to go" style="font-family:Outfit,sans-serif;font-weight:500;font-size:16.5px;letter-spacing:-.005em;margin:24px 0 0;color:#ffffff">Tecnología lista</h3>
+<p data-en="A secure platform that plugs into your operations with no IT development." style="font-size:13.5px;line-height:1.6;color:#b9cbd8;margin:9px 0 0">Plataforma segura que se integra con tu operativa sin desarrollo informático.</p>
+</article>
+<article data-reveal="" data-delay="270" style="opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s,border-color .35s,background .35s;background:#22506f;border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:26px 24px 28px" style-hover="transform:translateY(-7px);border-color:#efbc0b;box-shadow:0 22px 44px rgba(0,0,0,.24)">
+<span style="width:42px;height:42px;border-radius:11px;border:1px solid rgba(255,255,255,.24);color:#efbc0b;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path d="M3.5 11L12 4l8.5 7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M5.5 10.5v9h13v-9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path></svg></span>
+<h3 data-en="Doctors at home" style="font-family:Outfit,sans-serif;font-weight:500;font-size:16.5px;letter-spacing:-.005em;margin:24px 0 0;color:#ffffff">Médicos a domicilio</h3>
+<p data-en="Home visits coordinated in Spain, Portugal, Italy and France, with case follow-up." style="font-size:13.5px;line-height:1.6;color:#b9cbd8;margin:9px 0 0">Coordinación de visitas en España, Portugal, Italia y Francia con seguimiento del caso.</p>
+</article>
+</div>
+</div>
+</section><section id="eu-como" style="background:#f7f7f4;padding:96px 0">
+<div style="max-width:1200px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:56px;align-items:center">
+<div data-reveal="" style="opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);position:relative">
+<div style="border-radius:16px;overflow:hidden;min-height:300px;background:repeating-linear-gradient(135deg,#dfe4e0 0 10px,#eceeea 10px 20px);display:flex;align-items:flex-start;padding:16px;box-shadow:0 22px 50px rgba(30,72,101,.13)">
+<span data-en="PHOTO · doctor in teleconsultation, natural light, neutral space" style="font:10.5px ui-monospace,Menlo,monospace;letter-spacing:.04em;color:#1e4865;background:rgba(255,255,255,.94);padding:6px 9px;border-radius:6px">FOTO · médico en teleconsulta, luz natural, espacio neutro</span>
+</div>
+<div style="position:absolute;left:18px;right:18px;bottom:-24px;background:#ffffff;border-radius:13px;padding:13px 15px;display:flex;align-items:center;gap:12px;box-shadow:0 18px 40px rgba(30,72,101,.18)">
+<span style="width:32px;height:32px;border-radius:50%;background:#79b19c;color:#ffffff;display:flex;align-items:center;justify-content:center;flex:none;animation:eu-pulse 2.6s infinite"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="currentColor"></path></svg></span>
+<div><div data-en="Active case · Madrid → Lisbon" style="font-family:Outfit,sans-serif;font-weight:500;font-size:14px">Caso activo · Madrid → Lisboa</div><div data-en="Specialist assigned in 1 min 40 s" style="font-size:12px;color:#5a7d94;margin-top:2px">Especialista asignado en 1 min 40 s</div></div>
+</div>
+</div>
+<div data-reveal="" data-delay="120" style="opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)">
+<div data-en="HOW IT WORKS" style="font-size:11px;letter-spacing:.2em;color:#45677d">CÓMO FUNCIONA</div>
+<h2 data-en="From the first call to resolution" style="font-family:Outfit,sans-serif;font-weight:500;font-size:clamp(27px,3.1vw,38px);line-height:1.14;letter-spacing:-.025em;margin:12px 0 0;text-wrap:balance">De la primera llamada a la resolución</h2>
+<ol style="list-style:none;margin:32px 0 0;padding:0;display:flex;flex-direction:column;gap:22px">
+<li data-step="" style="display:grid;grid-template-columns:38px 1fr;gap:12px;opacity:0;transform:translateX(-14px);transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1)">
+<span style="font-family:Outfit,sans-serif;font-weight:500;font-size:15px;color:#c79a0c">01</span>
+<div><div data-en="The patient gets in touch" style="font-family:Outfit,sans-serif;font-weight:500;font-size:15.5px">El paciente contacta</div><p data-en="Through the app, by phone or on the web, in their own language and at any hour." style="font-size:13.5px;line-height:1.6;color:#4d738c;margin:5px 0 0">A través de la app, teléfono o web, en su propio idioma y a cualquier hora.</p></div>
+</li>
+<li data-step="" style="display:grid;grid-template-columns:38px 1fr;gap:12px;opacity:0;transform:translateX(-14px);transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1)">
+<span style="font-family:Outfit,sans-serif;font-weight:500;font-size:15px;color:#c79a0c">02</span>
+<div><div data-en="We assign the doctor" style="font-family:Outfit,sans-serif;font-weight:500;font-size:15.5px">Asignamos al médico</div><p data-en="Our operations centre activates the right professional from the local network." style="font-size:13.5px;line-height:1.6;color:#4d738c;margin:5px 0 0">Nuestro centro de operaciones activa al profesional adecuado de la red local.</p></div>
+</li>
+<li data-step="" style="display:grid;grid-template-columns:38px 1fr;gap:12px;opacity:0;transform:translateX(-14px);transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1)">
+<span style="font-family:Outfit,sans-serif;font-weight:500;font-size:15px;color:#c79a0c">03</span>
+<div><div data-en="The case is resolved" style="font-family:Outfit,sans-serif;font-weight:500;font-size:15.5px">Se resuelve el caso</div><p data-en="Teleconsultation, home visit or hospital coordination, with a valid prescription." style="font-size:13.5px;line-height:1.6;color:#4d738c;margin:5px 0 0">Teleconsulta, visita a domicilio o coordinación hospitalaria, con receta válida.</p></div>
+</li>
+<li data-step="" style="display:grid;grid-template-columns:38px 1fr;gap:12px;opacity:0;transform:translateX(-14px);transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1)">
+<span style="font-family:Outfit,sans-serif;font-weight:500;font-size:15px;color:#c79a0c">04</span>
+<div><div data-en="Full follow-up" style="font-family:Outfit,sans-serif;font-weight:500;font-size:15.5px">Seguimiento total</div><p data-en="Medical report, satisfaction survey and an audit of the service provided." style="font-size:13.5px;line-height:1.6;color:#4d738c;margin:5px 0 0">Informe médico, encuesta de satisfacción y auditoría del servicio prestado.</p></div>
+</li>
+</ol>
+</div>
+</div>
+</section>
+
+<section id="eu-cobertura" style="background:#f7f7f4;padding:40px 0 96px">
+<div style="max-width:1200px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:56px;align-items:center">
+<div data-reveal="" style="opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)">
+<div data-en="GLOBAL COVERAGE" style="font-size:11px;letter-spacing:.2em;color:#45677d">COBERTURA GLOBAL</div>
+<h2 data-en="Present wherever your policyholders are" style="font-family:Outfit,sans-serif;font-weight:500;font-size:clamp(27px,3.1vw,38px);line-height:1.14;letter-spacing:-.025em;margin:12px 0 0;text-wrap:balance">Presentes donde estén tus asegurados</h2>
+<p data-en="Medical capabilities in over 80 countries with local knowledge, to give a consistent, high-quality response at any destination." style="font-size:15px;line-height:1.62;color:#4d738c;margin:18px 0 0;max-width:26em;text-wrap:pretty">Capacidades médicas en más de 80 países con conocimiento local, para dar una respuesta homogénea y de calidad en cualquier destino.</p>
+<div style="display:flex;gap:56px;margin-top:32px">
+<div><div style="font-family:Outfit,sans-serif;font-weight:500;font-size:30px;letter-spacing:-.02em"><span data-count="70" data-suffix="k">0</span></div><div data-en="Prescriptions accepted" style="font-size:12.5px;color:#4e7288;margin-top:6px">Recetas aceptadas</div></div>
+<div><div style="font-family:Outfit,sans-serif;font-weight:500;font-size:30px;letter-spacing:-.02em">4</div><div data-en="Countries with home visits" style="font-size:12.5px;color:#4e7288;margin-top:6px">Países con visita a domicilio</div></div>
+</div>
+</div>
+<div data-reveal="" data-delay="120" style="opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);position:relative;background:#1e4865;border-radius:18px;padding:26px;min-height:300px;overflow:hidden">
+<svg viewBox="0 0 360 260" role="img" aria-label="Diagrama de casos coordinados desde el centro de operaciones hacia la red médica local" style="width:100%;height:auto;display:block">
+<g stroke="#efbc0b" stroke-width="1.1" opacity=".85" stroke-dasharray="4 7" style="animation:eu-dash 2.6s linear infinite">
+<path d="M96 120 L172 96"></path><path d="M96 120 L206 128"></path><path d="M96 120 L250 108"></path><path d="M96 120 L292 132"></path><path d="M96 120 L318 96"></path><path d="M96 120 L236 166"></path><path d="M96 120 L172 158"></path><path d="M96 120 L128 176"></path><path d="M96 120 L290 176"></path>
+</g>
+<circle cx="96" cy="120" r="7" fill="#efbc0b"></circle>
+<circle cx="96" cy="120" r="13" fill="none" stroke="#efbc0b" stroke-width="1" opacity=".45"></circle>
+<g fill="#79b19c"><circle cx="172" cy="96" r="5"></circle><circle cx="206" cy="128" r="5"></circle><circle cx="250" cy="108" r="5"></circle><circle cx="292" cy="132" r="5"></circle><circle cx="318" cy="96" r="5"></circle><circle cx="236" cy="166" r="5"></circle><circle cx="172" cy="158" r="5"></circle><circle cx="128" cy="176" r="5"></circle><circle cx="290" cy="176" r="5"></circle></g>
+</svg>
+<div style="position:absolute;left:26px;bottom:26px;background:#ffffff;border-radius:11px;padding:10px 14px">
+<div data-en="RIGHT NOW" style="font-size:9.5px;letter-spacing:.17em;color:#4f6a7c">EN ESTE MOMENTO</div>
+<div style="font-family:Outfit,sans-serif;font-weight:500;font-size:13.5px;margin-top:3px"><span data-count="32">0</span><span data-en=" cases being coordinated"> casos coordinándose</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="eu-servicios" style="background:#e9efe9;padding:88px 0">
+<div style="max-width:1200px;margin:0 auto;padding:0 32px">
+<div data-reveal="" style="opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)">
+<div data-en="SERVICES" style="font-size:11px;letter-spacing:.2em;color:#4a6b58">SERVICIOS</div>
+<h2 data-en="A complete catalogue of medical assistance" style="font-family:Outfit,sans-serif;font-weight:500;font-size:clamp(27px,3.1vw,38px);line-height:1.14;letter-spacing:-.025em;margin:12px 0 0;max-width:20em;text-wrap:balance">Un catálogo completo de asistencia médica</h2>
+</div>
+<div id="eu-chips" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:38px">
+<span data-chip="" style="opacity:0;transform:translateY(12px) scale(.96);transition:opacity .45s cubic-bezier(.2,.7,.2,1),transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s;display:inline-flex;align-items:center;gap:8px;background:#ffffff;border-radius:999px;padding:11px 18px;font-size:13.5px;color:#1e4865;cursor:default" style-hover="transform:translateY(-3px);box-shadow:0 12px 24px rgba(30,72,101,.13)"><svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg>Fit to Fly</span>
+<span data-chip="" style="opacity:0;transform:translateY(12px) scale(.96);transition:opacity .45s cubic-bezier(.2,.7,.2,1),transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s;display:inline-flex;align-items:center;gap:8px;background:#ffffff;border-radius:999px;padding:11px 18px;font-size:13.5px;color:#1e4865;cursor:default" style-hover="transform:translateY(-3px);box-shadow:0 12px 24px rgba(30,72,101,.13)"><svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg><span data-en="24/7 video consultation">Videoconsulta 24/7</span></span>
+<span data-chip="" style="opacity:0;transform:translateY(12px) scale(.96);transition:opacity .45s cubic-bezier(.2,.7,.2,1),transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s;display:inline-flex;align-items:center;gap:8px;background:#ffffff;border-radius:999px;padding:11px 18px;font-size:13.5px;color:#1e4865;cursor:default" style-hover="transform:translateY(-3px);box-shadow:0 12px 24px rgba(30,72,101,.13)"><svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg><span data-en="Medical rounds">Rondas médicas</span></span>
+<span data-chip="" style="opacity:0;transform:translateY(12px) scale(.96);transition:opacity .45s cubic-bezier(.2,.7,.2,1),transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s;display:inline-flex;align-items:center;gap:8px;background:#ffffff;border-radius:999px;padding:11px 18px;font-size:13.5px;color:#1e4865;cursor:default" style-hover="transform:translateY(-3px);box-shadow:0 12px 24px rgba(30,72,101,.13)"><svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg><span data-en="Ambulances">Ambulancias</span></span>
+<span data-chip="" style="opacity:0;transform:translateY(12px) scale(.96);transition:opacity .45s cubic-bezier(.2,.7,.2,1),transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s;display:inline-flex;align-items:center;gap:8px;background:#ffffff;border-radius:999px;padding:11px 18px;font-size:13.5px;color:#1e4865;cursor:default" style-hover="transform:translateY(-3px);box-shadow:0 12px 24px rgba(30,72,101,.13)"><svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg><span data-en="Second opinion">Segunda opinión</span></span>
+<span data-chip="" style="opacity:0;transform:translateY(12px) scale(.96);transition:opacity .45s cubic-bezier(.2,.7,.2,1),transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s;display:inline-flex;align-items:center;gap:8px;background:#ffffff;border-radius:999px;padding:11px 18px;font-size:13.5px;color:#1e4865;cursor:default" style-hover="transform:translateY(-3px);box-shadow:0 12px 24px rgba(30,72,101,.13)"><svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg><span data-en="Medical escort">Escolta médica</span></span>
+<span data-chip="" style="opacity:0;transform:translateY(12px) scale(.96);transition:opacity .45s cubic-bezier(.2,.7,.2,1),transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s;display:inline-flex;align-items:center;gap:8px;background:#ffffff;border-radius:999px;padding:11px 18px;font-size:13.5px;color:#1e4865;cursor:default" style-hover="transform:translateY(-3px);box-shadow:0 12px 24px rgba(30,72,101,.13)"><svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg><span data-en="Medical audit">Auditoría médica</span></span>
+<span data-chip="" style="opacity:0;transform:translateY(12px) scale(.96);transition:opacity .45s cubic-bezier(.2,.7,.2,1),transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s;display:inline-flex;align-items:center;gap:8px;background:#ffffff;border-radius:999px;padding:11px 18px;font-size:13.5px;color:#1e4865;cursor:default" style-hover="transform:translateY(-3px);box-shadow:0 12px 24px rgba(30,72,101,.13)"><svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg><span data-en="Global telemedicine">Telemedicina global</span></span>
+<span data-chip="" style="opacity:0;transform:translateY(12px) scale(.96);transition:opacity .45s cubic-bezier(.2,.7,.2,1),transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s;display:inline-flex;align-items:center;gap:8px;background:#ffffff;border-radius:999px;padding:11px 18px;font-size:13.5px;color:#1e4865;cursor:default" style-hover="transform:translateY(-3px);box-shadow:0 12px 24px rgba(30,72,101,.13)"><svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg><span data-en="Social and health support">Apoyo sociosanitario</span></span>
+<span data-chip="" style="opacity:0;transform:translateY(12px) scale(.96);transition:opacity .45s cubic-bezier(.2,.7,.2,1),transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s;display:inline-flex;align-items:center;gap:8px;background:#ffffff;border-radius:999px;padding:11px 18px;font-size:13.5px;color:#1e4865;cursor:default" style-hover="transform:translateY(-3px);box-shadow:0 12px 24px rgba(30,72,101,.13)"><svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg><span data-en="Event coverage">Cobertura de eventos</span></span>
+<span data-chip="" style="opacity:0;transform:translateY(12px) scale(.96);transition:opacity .45s cubic-bezier(.2,.7,.2,1),transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s;display:inline-flex;align-items:center;gap:8px;background:#ffffff;border-radius:999px;padding:11px 18px;font-size:13.5px;color:#1e4865;cursor:default" style-hover="transform:translateY(-3px);box-shadow:0 12px 24px rgba(30,72,101,.13)"><svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg><span data-en="Hospital coordination">Coordinación hospitalaria</span></span>
+<span data-chip="" style="opacity:0;transform:translateY(12px) scale(.96);transition:opacity .45s cubic-bezier(.2,.7,.2,1),transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s;display:inline-flex;align-items:center;gap:8px;background:#ffffff;border-radius:999px;padding:11px 18px;font-size:13.5px;color:#1e4865;cursor:default" style-hover="transform:translateY(-3px);box-shadow:0 12px 24px rgba(30,72,101,.13)"><svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg><span data-en="24/7 operations centre">Centro de operaciones 24/7</span></span>
+</div>
+</div>
+</section>
+
+<div data-reveal="" style="opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);padding:44px 0 56px;text-align:center">
+<div data-en="THEY TRUST OUR 24/7 ASSISTANCE" style="font-size:11px;letter-spacing:.2em;color:#45677d">CONFÍAN EN NUESTRA ASISTENCIA 24/7</div>
+<div id="eu-brands" style="margin-top:26px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)">
+<div id="eu-brand-track" style="display:flex;width:max-content;animation:eu-marquee 34s linear infinite">
+<div style="display:flex;align-items:center;gap:18px;padding-right:18px">
+<span style="display:flex;align-items:center;justify-content:center;gap:9px;flex:none;width:190px;height:52px;border-radius:11px;background:#ffffff;border:1px solid rgba(30,72,101,.1)"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#d9d9d2"></path></svg><span data-en="LOGO · insurer" style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#5c7383">LOGO · aseguradora</span></span>
+<span style="display:flex;align-items:center;justify-content:center;gap:9px;flex:none;width:190px;height:52px;border-radius:11px;background:#ffffff;border:1px solid rgba(30,72,101,.1)"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#d9d9d2"></path></svg><span data-en="LOGO · broker" style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#5c7383">LOGO · correduría</span></span>
+<span style="display:flex;align-items:center;justify-content:center;gap:9px;flex:none;width:190px;height:52px;border-radius:11px;background:#ffffff;border:1px solid rgba(30,72,101,.1)"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#d9d9d2"></path></svg><span data-en="LOGO · airline" style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#5c7383">LOGO · aerolínea</span></span>
+<span style="display:flex;align-items:center;justify-content:center;gap:9px;flex:none;width:190px;height:52px;border-radius:11px;background:#ffffff;border:1px solid rgba(30,72,101,.1)"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#d9d9d2"></path></svg><span data-en="LOGO · multinational" style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#5c7383">LOGO · multinacional</span></span>
+<span style="display:flex;align-items:center;justify-content:center;gap:9px;flex:none;width:190px;height:52px;border-radius:11px;background:#ffffff;border:1px solid rgba(30,72,101,.1)"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#d9d9d2"></path></svg><span data-en="LOGO · NGO" style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#5c7383">LOGO · ONG</span></span>
+<span style="display:flex;align-items:center;justify-content:center;gap:9px;flex:none;width:190px;height:52px;border-radius:11px;background:#ffffff;border:1px solid rgba(30,72,101,.1)"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#d9d9d2"></path></svg><span data-en="LOGO · hospitals" style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#5c7383">LOGO · hospitales</span></span>
+<span style="display:flex;align-items:center;justify-content:center;gap:9px;flex:none;width:190px;height:52px;border-radius:11px;background:#ffffff;border:1px solid rgba(30,72,101,.1)"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#d9d9d2"></path></svg><span data-en="LOGO · tour operator" style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#5c7383">LOGO · turoperador</span></span>
+</div>
+<div aria-hidden="true" style="display:flex;align-items:center;gap:18px;padding-right:18px">
+<span style="display:flex;align-items:center;justify-content:center;gap:9px;flex:none;width:190px;height:52px;border-radius:11px;background:#ffffff;border:1px solid rgba(30,72,101,.1)"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#d9d9d2"></path></svg><span style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#5c7383">LOGO · aseguradora</span></span>
+<span style="display:flex;align-items:center;justify-content:center;gap:9px;flex:none;width:190px;height:52px;border-radius:11px;background:#ffffff;border:1px solid rgba(30,72,101,.1)"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#d9d9d2"></path></svg><span style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#5c7383">LOGO · correduría</span></span>
+<span style="display:flex;align-items:center;justify-content:center;gap:9px;flex:none;width:190px;height:52px;border-radius:11px;background:#ffffff;border:1px solid rgba(30,72,101,.1)"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#d9d9d2"></path></svg><span style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#5c7383">LOGO · aerolínea</span></span>
+<span style="display:flex;align-items:center;justify-content:center;gap:9px;flex:none;width:190px;height:52px;border-radius:11px;background:#ffffff;border:1px solid rgba(30,72,101,.1)"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#d9d9d2"></path></svg><span style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#5c7383">LOGO · multinacional</span></span>
+<span style="display:flex;align-items:center;justify-content:center;gap:9px;flex:none;width:190px;height:52px;border-radius:11px;background:#ffffff;border:1px solid rgba(30,72,101,.1)"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#d9d9d2"></path></svg><span style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#5c7383">LOGO · ONG</span></span>
+<span style="display:flex;align-items:center;justify-content:center;gap:9px;flex:none;width:190px;height:52px;border-radius:11px;background:#ffffff;border:1px solid rgba(30,72,101,.1)"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#d9d9d2"></path></svg><span style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#5c7383">LOGO · hospitales</span></span>
+<span style="display:flex;align-items:center;justify-content:center;gap:9px;flex:none;width:190px;height:52px;border-radius:11px;background:#ffffff;border:1px solid rgba(30,72,101,.1)"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#d9d9d2"></path></svg><span style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#5c7383">LOGO · turoperador</span></span>
+</div>
+</div>
+</div>
+</div>
+</main></div>
+
+<section id="eu-nosotros" style="background:#f7f7f4;padding:88px 0">
+<div data-reveal="" style="opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);max-width:1200px;margin:0 auto;padding:0 32px">
+<div id="eu-carousel" role="group" aria-roledescription="carrusel" aria-label="Opiniones de pacientes" style="position:relative;overflow:hidden">
+<div id="eu-track" style="display:flex;transition:transform .7s cubic-bezier(.4,0,.2,1)">
+
+<div data-slide="" role="group" aria-roledescription="diapositiva" aria-label="1 de 3" style="flex:0 0 100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:56px;align-items:center">
+<div>
+<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg>
+<blockquote data-en="“Always an immediate response. Dr. Acosta’s care was flawless, even thousands of kilometres from home.”" style="font-family:Outfit,sans-serif;font-weight:500;font-size:clamp(21px,2.3vw,28px);line-height:1.32;letter-spacing:-.015em;color:#1e4865;margin:22px 0 0;text-wrap:pretty">“Siempre con respuesta inmediata. La atención de la Dra. Acosta fue impecable, incluso estando a miles de kilómetros de casa.”</blockquote>
+<div style="display:flex;align-items:center;gap:12px;margin-top:24px">
+<div style="display:flex;gap:3px" role="img" aria-label="4.9 de 5"><span style="color:#efbc0b;font-size:14px">★</span><span style="color:#efbc0b;font-size:14px">★</span><span style="color:#efbc0b;font-size:14px">★</span><span style="color:#efbc0b;font-size:14px">★</span><span style="color:#efbc0b;font-size:14px">★</span></div>
+<span data-en="Post-service survey · 4.9/5" style="font-size:12.5px;color:#4e7288">Encuesta post-servicio · 4.9/5</span>
+</div>
+</div>
+<div style="border-radius:16px;overflow:hidden;min-height:300px;background:repeating-linear-gradient(135deg,#dfe4e0 0 10px,#eceeea 10px 20px);display:flex;align-items:flex-start;padding:16px;box-shadow:0 22px 50px rgba(30,72,101,.13)">
+<span data-en="PHOTO · doctor looking at camera, natural light, neutral space" style="font:10.5px ui-monospace,Menlo,monospace;letter-spacing:.04em;color:#1e4865;background:rgba(255,255,255,.94);padding:6px 9px;border-radius:6px">FOTO · médico mirando a cámara, luz natural, espacio neutro</span>
+</div>
+</div>
+
+<div data-slide="" role="group" aria-roledescription="diapositiva" aria-label="2 de 3" style="flex:0 0 100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:56px;align-items:center">
+<div>
+<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg>
+<blockquote data-en="“We coordinated a hospital admission in Bangkok on a Sunday. Someone answered on the first ring and followed the case through to discharge.”" style="font-family:Outfit,sans-serif;font-weight:500;font-size:clamp(21px,2.3vw,28px);line-height:1.32;letter-spacing:-.015em;color:#1e4865;margin:22px 0 0;text-wrap:pretty">“Coordinamos un ingreso hospitalario en Bangkok un domingo. Alguien descolgó al primer tono y siguió el caso hasta el alta.”</blockquote>
+<div style="display:flex;align-items:center;gap:12px;margin-top:24px">
+<div style="display:flex;gap:3px" role="img" aria-label="5 de 5"><span style="color:#efbc0b;font-size:14px">★</span><span style="color:#efbc0b;font-size:14px">★</span><span style="color:#efbc0b;font-size:14px">★</span><span style="color:#efbc0b;font-size:14px">★</span><span style="color:#efbc0b;font-size:14px">★</span></div>
+<span data-en="Travel insurer · operations team" style="font-size:12.5px;color:#4e7288">Aseguradora de viaje · equipo de operaciones</span>
+</div>
+</div>
+<div style="border-radius:16px;overflow:hidden;min-height:300px;background:repeating-linear-gradient(135deg,#dfe4e0 0 10px,#eceeea 10px 20px);display:flex;align-items:flex-start;padding:16px;box-shadow:0 22px 50px rgba(30,72,101,.13)">
+<span data-en="PHOTO · operations centre, natural light, neutral space" style="font:10.5px ui-monospace,Menlo,monospace;letter-spacing:.04em;color:#1e4865;background:rgba(255,255,255,.94);padding:6px 9px;border-radius:6px">FOTO · centro de operaciones, luz natural, espacio neutro</span>
+</div>
+</div>
+
+<div data-slide="" role="group" aria-roledescription="diapositiva" aria-label="3 de 3" style="flex:0 0 100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:56px;align-items:center">
+<div>
+<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg>
+<blockquote data-en="“The doctor spoke to my mother in her own language. For an eighty-year-old woman alone in another country, that changes everything.”" style="font-family:Outfit,sans-serif;font-weight:500;font-size:clamp(21px,2.3vw,28px);line-height:1.32;letter-spacing:-.015em;color:#1e4865;margin:22px 0 0;text-wrap:pretty">“El médico habló con mi madre en su idioma. Para una mujer de ochenta años sola en otro país, eso lo cambia todo.”</blockquote>
+<div style="display:flex;align-items:center;gap:12px;margin-top:24px">
+<div style="display:flex;gap:3px" role="img" aria-label="4.8 de 5"><span style="color:#efbc0b;font-size:14px">★</span><span style="color:#efbc0b;font-size:14px">★</span><span style="color:#efbc0b;font-size:14px">★</span><span style="color:#efbc0b;font-size:14px">★</span><span style="color:#efbc0b;font-size:14px">★</span></div>
+<span data-en="Family member · home visit in Lisbon" style="font-size:12.5px;color:#4e7288">Familiar · visita a domicilio en Lisboa</span>
+</div>
+</div>
+<div style="border-radius:16px;overflow:hidden;min-height:300px;background:repeating-linear-gradient(135deg,#dfe4e0 0 10px,#eceeea 10px 20px);display:flex;align-items:flex-start;padding:16px;box-shadow:0 22px 50px rgba(30,72,101,.13)">
+<span data-en="PHOTO · doctor with patient at home, natural light" style="font:10.5px ui-monospace,Menlo,monospace;letter-spacing:.04em;color:#1e4865;background:rgba(255,255,255,.94);padding:6px 9px;border-radius:6px">FOTO · médico con paciente en casa, luz natural</span>
+</div>
+</div>
+
+</div>
+</div>
+<div style="display:flex;align-items:center;gap:16px;margin-top:34px">
+<div id="eu-dots" style="display:flex;align-items:center;gap:8px">
+<button data-dot="" type="button" aria-label="Opinión 1" aria-current="true" style="border:0;cursor:pointer;padding:0;height:6px;width:30px;border-radius:999px;background:#1e4865;transition:width .4s cubic-bezier(.4,0,.2,1),background .4s"></button>
+<button data-dot="" type="button" aria-label="Opinión 2" aria-current="false" style="border:0;cursor:pointer;padding:0;height:6px;width:10px;border-radius:999px;background:#c3ccd3;transition:width .4s cubic-bezier(.4,0,.2,1),background .4s"></button>
+<button data-dot="" type="button" aria-label="Opinión 3" aria-current="false" style="border:0;cursor:pointer;padding:0;height:6px;width:10px;border-radius:999px;background:#c3ccd3;transition:width .4s cubic-bezier(.4,0,.2,1),background .4s"></button>
+</div>
+<div style="margin-left:auto;display:flex;gap:9px">
+<button id="eu-prev" type="button" aria-label="Opinión anterior" style="width:42px;height:42px;border-radius:50%;border:1px solid rgba(30,72,101,.22);background:transparent;color:#1e4865;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .25s,border-color .25s,transform .25s cubic-bezier(.2,.7,.2,1)" style-hover="background:#1e4865;border-color:#1e4865;color:#ffffff;transform:translateY(-2px)"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M19 12H6M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" fill="none"></path></svg></button>
+<button id="eu-next" type="button" aria-label="Opinión siguiente" style="width:42px;height:42px;border-radius:50%;border:1px solid rgba(30,72,101,.22);background:transparent;color:#1e4865;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .25s,border-color .25s,transform .25s cubic-bezier(.2,.7,.2,1)" style-hover="background:#1e4865;border-color:#1e4865;color:#ffffff;transform:translateY(-2px)"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" fill="none"></path></svg></button>
+</div>
+</div>
+</div>
+</section>
+
+<section id="eu-contacto" style="background:#f7f7f4;padding:0 0 88px">
+<div style="max-width:1200px;margin:0 auto;padding:0 32px">
+<div data-reveal="" style="opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);position:relative;background:#1e4865;border-radius:20px;padding:76px 32px 80px;text-align:center;overflow:hidden">
+<svg viewBox="0 0 24 24" width="180" height="180" aria-hidden="true" style="position:absolute;right:-48px;top:-34px;opacity:.07"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#ffffff"></path></svg>
+<svg viewBox="0 0 24 24" width="140" height="140" aria-hidden="true" style="position:absolute;left:-40px;bottom:-40px;opacity:.07"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#ffffff"></path></svg>
+<h2 data-en="Give your clients an outstanding medical experience" style="position:relative;font-family:Outfit,sans-serif;font-weight:400;font-size:clamp(27px,3.3vw,40px);line-height:1.18;letter-spacing:-.02em;color:#ffffff;margin:0 auto;max-width:15em;text-wrap:balance">Dale a tus clientes una experiencia médica sobresaliente</h2>
+<p data-en="Tell us how you operate and we will design a tailored assistance model in under a week." style="position:relative;font-size:14.5px;line-height:1.6;color:#b9cbd8;margin:20px auto 0;max-width:34em;text-wrap:pretty">Cuéntanos tu operativa y diseñamos un modelo de asistencia a medida en menos de una semana.</p>
+<div style="position:relative;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:34px">
+<button id="eu-demo" type="button" data-en="Request a demo" style="display:inline-flex;align-items:center;gap:9px;border:0;cursor:pointer;font-family:Outfit,sans-serif;font-weight:500;font-size:14.5px;color:#1e4865;background:#efbc0b;padding:14px 24px;border-radius:999px;transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s,background .25s" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(231,159,26,.34);background:#e9b200">Solicitar una demo<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" style="flex:none"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path></svg></button>
+<a href="tel:+34919227810" style="display:inline-flex;align-items:center;font-family:Outfit,sans-serif;font-weight:400;font-size:14.5px;color:#ffffff;border:1px solid rgba(255,255,255,.4);padding:14px 24px;border-radius:999px;transition:background .25s,transform .25s cubic-bezier(.2,.7,.2,1)" style-hover="background:rgba(255,255,255,.12);transform:translateY(-3px);color:#ffffff">+34 919 22 78 10</a>
+</div>
+<div id="eu-demo-state" role="status" style="position:relative;min-height:22px;margin-top:20px"></div>
+</div>
+</div>
+</section>
+
+
+
+<footer style="background:#efefe9;padding:62px 0 0">
+<div style="max-width:1200px;margin:0 auto;padding:0 32px">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:40px">
+<div>
+<div style="display:flex;align-items:center;gap:7px">
+<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="flex:none"><path d="M10 2.5h4v7.5h7.5v4H14V21.5h-4V14H2.5v-4H10z" fill="#efbc0b"></path></svg>
+<span style="font-family:Outfit,sans-serif;font-weight:600;font-size:19px;letter-spacing:-.02em;color:#1e4865">eumedical</span>
+</div>
+<p data-en="Medical capabilities in over 80 countries. Calle Velázquez 157, 28002 Madrid" style="font-size:13px;line-height:1.65;color:#456b85;margin:16px 0 0;max-width:22em">Capacidades médicas en más de 80 países. Calle Velázquez 157, 28002 Madrid</p>
+<a href="mailto:business@eumedical.es" style="display:inline-block;font-size:13px;color:#2c5873;margin-top:10px">business@eumedical.es</a>
+</div>
+<div>
+<h3 data-en="SERVICES" style="font-size:10.5px;letter-spacing:.17em;color:#456b85;font-weight:400;margin:0 0 16px">SERVICIOS</h3>
+<div style="display:flex;flex-direction:column;gap:10px">
+<a href="#eu-servicios" data-en="Telemedicine" style="font-size:13.5px;color:#2c5873">Telemedicina</a>
+<a href="#eu-servicios" data-en="Doctors at home" style="font-size:13.5px;color:#2c5873">Médicos a domicilio</a>
+<a href="#eu-servicios" data-en="Medical network" style="font-size:13.5px;color:#2c5873">Red médica</a>
+<a href="#eu-servicios" data-en="24/7 centre" style="font-size:13.5px;color:#2c5873">Centro 24/7</a>
+</div>
+</div>
+<div>
+<h3 data-en="CONTACT" style="font-size:10.5px;letter-spacing:.17em;color:#456b85;font-weight:400;margin:0 0 16px">CONTACTO</h3>
+<div style="display:flex;flex-direction:column;gap:10px">
+<a href="#eu-nosotros" data-en="About us" style="font-size:13.5px;color:#2c5873">Nosotros</a>
+<a href="#eu-contacto" data-en="Careers" style="font-size:13.5px;color:#2c5873">Empleo</a>
+<a href="#eu-contacto" style="font-size:13.5px;color:#2c5873">LinkedIn</a>
+<a href="#eu-contacto" data-en="Press" style="font-size:13.5px;color:#2c5873">Prensa</a>
+</div>
+</div>
+<div>
+<h3 data-en="LEGAL" style="font-size:10.5px;letter-spacing:.17em;color:#456b85;font-weight:400;margin:0 0 16px">LEGAL</h3>
+<div style="display:flex;flex-direction:column;gap:10px">
+<a href="#eu-top" data-en="Privacy" style="font-size:13.5px;color:#2c5873">Privacidad</a>
+<a href="#eu-top" data-en="Cookies" style="font-size:13.5px;color:#2c5873">Cookies</a>
+<a href="#eu-top" data-en="Legal notice" style="font-size:13.5px;color:#2c5873">Aviso legal</a>
+</div>
+</div>
+</div>
+<div style="margin-top:52px;padding:20px 0;border-top:1px solid rgba(30,72,101,.13);display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between">
+<span data-en="© 2026 EUMEDICAL · All rights reserved" style="font-size:11.5px;color:#456b85">© 2026 EUMEDICAL · Todos los derechos reservados</span>
+<span data-en="Made with care in Madrid" style="font-size:11.5px;color:#456b85">Hecho con cariño en Madrid</span>
+</div>
+</div>
+</footer>
+
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280}}">
+class Component extends DCLogic {
+  componentDidMount() {
+    const root = this.el || document;
+    const $ = (s) => root.querySelector(s);
+    const $$ = (s) => Array.from(root.querySelectorAll(s));
+    this._cleanup = [];
+    const on = (el, ev, fn, opt) => { if (!el) return; el.addEventListener(ev, fn, opt); this._cleanup.push(() => el.removeEventListener(ev, fn, opt)); };
+
+    import('./globe.js').then(m => { this._disposeGlobe = m.initGlobe($('#eu-map')); }).catch(() => {});
+
+    // ---- language toggle -------------------------------------------------
+    const swaps = $$('[data-en]');
+    swaps.forEach(el => { if (!el.dataset.es) el.dataset.es = el.innerHTML; });
+    const esBtn = $('#eu-lang-es'), enBtn = $('#eu-lang-en');
+    const setLang = (lang) => {
+      swaps.forEach(el => { el.innerHTML = lang === 'en' ? el.dataset.en : el.dataset.es; });
+      document.documentElement.lang = lang === 'en' ? 'en' : 'es';
+      const active = 'background:#1e4865;color:#ffffff;';
+      [[esBtn, lang === 'es'], [enBtn, lang === 'en']].forEach(([b, isOn]) => {
+        if (!b) return;
+        b.style.background = isOn ? '#1e4865' : 'transparent';
+        b.style.color = isOn ? '#ffffff' : '#2c5873';
+        b.setAttribute('aria-pressed', String(isOn));
+      });
+      void active;
+    };
+    on(esBtn, 'click', () => setLang('es'));
+    on(enBtn, 'click', () => setLang('en'));
+
+    // ---- hero stagger ----------------------------------------------------
+    $$('[data-stagger]').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(22px)';
+      el.style.transition = 'opacity .85s cubic-bezier(.2,.7,.2,1), transform .85s cubic-bezier(.2,.7,.2,1)';
+      setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'none'; }, 90 + i * 130);
+    });
+
+    // ---- scroll reveals + counters + steps + chips -----------------------
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        io.unobserve(el);
+        const d = parseInt(el.dataset.delay || '0', 10);
+        setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'none'; }, d);
+        el.querySelectorAll('[data-count]').forEach(n => this.count(n, d));
+        if (el.hasAttribute('data-count')) this.count(el, d);
+      });
+    }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
+    $$('[data-reveal]').forEach(el => io.observe(el));
+    this._io = io;
+
+    const stepIo = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        stepIo.unobserve(e.target);
+        const list = $$('[data-step]');
+        setTimeout(() => { e.target.style.opacity = '1'; e.target.style.transform = 'none'; }, list.indexOf(e.target) * 110);
+      });
+    }, { threshold: 0.5 });
+    $$('[data-step]').forEach(el => stepIo.observe(el));
+    this._stepIo = stepIo;
+
+    const chipIo = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        chipIo.unobserve(e.target);
+        const list = $$('[data-chip]');
+        setTimeout(() => { e.target.style.opacity = '1'; e.target.style.transform = 'none'; }, list.indexOf(e.target) * 55);
+      });
+    }, { threshold: 0.3 });
+    $$('[data-chip]').forEach(el => chipIo.observe(el));
+    this._chipIo = chipIo;
+
+    // ---- sticky header morph --------------------------------------------
+    const header = $('#eu-header');
+    const onScroll = () => {
+      const past = window.scrollY > 24;
+      header.style.padding = past ? '12px 0' : '22px 0';
+      header.style.background = past ? 'rgba(247,247,244,.9)' : 'transparent';
+      header.style.backdropFilter = past ? 'saturate(180%) blur(14px)' : 'none';
+      header.style.webkitBackdropFilter = header.style.backdropFilter;
+      header.style.boxShadow = past ? '0 1px 0 rgba(30,72,101,.1)' : 'none';
+    };
+    onScroll();
+    on(window, 'scroll', onScroll, { passive: true });
+
+    // ---- mobile nav ------------------------------------------------------
+    const burger = $('#eu-burger'), mob = $('#eu-mobnav');
+    on(burger, 'click', () => {
+      const open = mob.style.display === 'block';
+      mob.style.display = open ? 'none' : 'block';
+      burger.setAttribute('aria-expanded', String(!open));
+    });
+    $$('#eu-mobnav a').forEach(a => on(a, 'click', () => { mob.style.display = 'none'; burger.setAttribute('aria-expanded', 'false'); }));
+
+    // ---- testimonial carousel -------------------------------------------
+    const track = $('#eu-track');
+    const slides = $$('[data-slide]');
+    const dots = $$('[data-dot]');
+    if (track && slides.length) {
+      let idx = 0;
+      const go = (n, userDriven) => {
+        idx = (n + slides.length) % slides.length;
+        track.style.transform = 'translateX(' + (-idx * 100) + '%)';
+        slides.forEach((s, i) => {
+          s.setAttribute('aria-hidden', String(i !== idx));
+          s.style.opacity = i === idx ? '1' : '0.28';
+          s.style.transition = 'opacity .6s cubic-bezier(.4,0,.2,1)';
+        });
+        dots.forEach((d, i) => {
+          d.style.width = i === idx ? '30px' : '10px';
+          d.style.background = i === idx ? '#1e4865' : '#c3ccd3';
+          d.setAttribute('aria-current', String(i === idx));
+        });
+        if (userDriven) restart();
+      };
+      let timer = null;
+      const restart = () => {
+        if (timer) clearInterval(timer);
+        timer = setInterval(() => go(idx + 1), 6500);
+      };
+      this._cleanup.push(() => timer && clearInterval(timer));
+      on($('#eu-next'), 'click', () => go(idx + 1, true));
+      on($('#eu-prev'), 'click', () => go(idx - 1, true));
+      dots.forEach((d, i) => on(d, 'click', () => go(i, true)));
+      const car = $('#eu-carousel');
+      on(car, 'mouseenter', () => timer && clearInterval(timer));
+      on(car, 'mouseleave', restart);
+      on(car, 'focusin', () => timer && clearInterval(timer));
+      on(car, 'focusout', restart);
+      on(car, 'keydown', (e) => {
+        if (e.key === 'ArrowRight') { e.preventDefault(); go(idx + 1, true); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); go(idx - 1, true); }
+      });
+      let x0 = null;
+      on(car, 'touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+      on(car, 'touchend', (e) => {
+        if (x0 === null) return;
+        const dx = e.changedTouches[0].clientX - x0;
+        if (Math.abs(dx) > 45) go(idx + (dx < 0 ? 1 : -1), true);
+        x0 = null;
+      });
+      car.setAttribute('tabindex', '0');
+      go(0);
+      restart();
+    }
+
+    // ---- demo button loading state --------------------------------------
+    const demo = $('#eu-demo'), demoState = $('#eu-demo-state');
+    on(demo, 'click', () => {
+      if (demo.dataset.busy) return;
+      demo.dataset.busy = '1';
+      const label = demo.innerHTML;
+      demo.innerHTML = '<span style="width:14px;height:14px;border-radius:50%;border:2px solid rgba(30,72,101,.3);border-top-color:#1e4865;display:inline-block;animation:eu-spin .7s linear infinite"></span>';
+      demo.style.background = '#e2d9b4';
+      setTimeout(() => {
+        demo.innerHTML = label;
+        demo.style.background = '#efbc0b';
+        delete demo.dataset.busy;
+        const en = document.documentElement.lang === 'en';
+        demoState.innerHTML = '<span style="font-size:13.5px;color:#cfe3d8">' + (en ? 'Thanks — we will be in touch within one business day.' : 'Gracias — te contactamos en menos de un día laborable.') + '</span>';
+      }, 1300);
+    });
+  }
+
+  count(node, delay) {
+    if (node.dataset.done) return;
+    node.dataset.done = '1';
+    const target = parseFloat(node.dataset.count);
+    const suffix = node.dataset.suffix || '';
+    const dur = 1100;
+    const start = performance.now() + (delay || 0);
+    const tick = (now) => {
+      const t = Math.min(1, Math.max(0, (now - start) / dur));
+      const eased = 1 - Math.pow(1 - t, 3);
+      node.textContent = Math.round(target * eased) + suffix;
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  componentWillUnmount() {
+    (this._cleanup || []).forEach(fn => fn());
+    [this._io, this._stepIo, this._chipIo].forEach(o => o && o.disconnect());
+    if (this._disposeGlobe) this._disposeGlobe();
+  }
+
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

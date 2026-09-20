@@ -1,0 +1,50 @@
+import type { Appointment } from './types'
+
+export const appointments: Appointment[] = [
+  {
+    id: 'appt-1',
+    doctorName: 'Dra. Martínez',
+    specialty: 'Medicina general',
+    whenLabel: 'Hoy · 18:30',
+    fullDateLabel: 'Hoy',
+    mode: 'Videoconsulta',
+    status: 'today',
+    joinUrl: '#',
+  },
+  {
+    id: 'appt-2',
+    doctorName: 'Dr. Rossi',
+    specialty: 'Dermatología',
+    whenLabel: 'Jueves 24 sept · 10:00',
+    fullDateLabel: 'Jueves 24 sept',
+    mode: 'Videoconsulta',
+    status: 'confirmed',
+  },
+  {
+    id: 'appt-3',
+    doctorName: 'Dra. Martínez',
+    specialty: 'Medicina general',
+    whenLabel: '3 sept',
+    fullDateLabel: '3 septiembre 2026',
+    mode: 'Consulta finalizada',
+    status: 'past',
+  },
+  {
+    id: 'appt-4',
+    doctorName: 'Dr. Rossi',
+    specialty: 'Dermatología',
+    whenLabel: '18 jul',
+    fullDateLabel: '18 julio 2026',
+    mode: 'Consulta finalizada',
+    status: 'past',
+  },
+  {
+    id: 'appt-5',
+    doctorName: 'Central operativa',
+    specialty: 'Fit to fly',
+    whenLabel: '2 may',
+    fullDateLabel: '2 mayo 2026',
+    mode: 'Consulta finalizada',
+    status: 'past',
+  },
+]
