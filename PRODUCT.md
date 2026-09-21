@@ -26,7 +26,7 @@ Eumedical owns its own private medical network (not a marketplace/aggregator), c
 
 ## Operating Context
 
-This repo is the deliverable for the **Eumedical Frontend & UX Trainee Challenge**, a hiring/recruitment exercise — the repo doubles as a job-application artifact, not just a product codebase. It is evaluated against the canonical Brand Book PDF in `docs/brand/BrandBook_EUMEDICAL_LOW.pdf` and the live `eumedical.es` site's actual content and stats.
+This repo is the deliverable for the **Eumedical Frontend & UX Trainee Challenge**, a hiring/recruitment exercise — the repo doubles as a job-application artifact, not just a product codebase. It is evaluated against the canonical Brand Book PDF provided by Eumedical for the process (not included in this repo — confidential company material) and the live `eumedical.es` site's actual content and stats.
 
 The repo also ships a starter `package.json` with intentional bugs (React 19 vs ReactDOM 18 major-version mismatch, missing `terser`, `@types/node` ahead of the `engines.node` target, a non-cross-platform `build:dev` script) that were diagnosed and corrected as part of the challenge; the fixes and the documented-but-unresolved risks (Twilio Programmable Video EOL Dec 2026, private `@eumedical/shared` scoped package, `@tanstack/react-query`/devtools version skew) are real constraints on any future build-out — see README.md section 4.
 
@@ -39,11 +39,11 @@ The repo also ships a starter `package.json` with intentional bugs (React 19 vs 
 
 ## Brand Commitments
 
-Company name "Eumedical" (lowercase "eumedical" in the logotype lockup). Identity is governed by the existing Brand Book PDF (`docs/brand/BrandBook_EUMEDICAL_LOW.pdf`) and the rules captured in `docs/brand/rules.md` — binding visual authority for any DESIGN.md work; not detailed further here per init scope (palette, type, and component decisions belong in DESIGN.md, not PRODUCT.md).
+Company name "Eumedical" (lowercase "eumedical" in the logotype lockup). Identity is governed by the existing Brand Book PDF (provided by Eumedical for the process, not included in this repo) and the rules captured in `docs/brand/rules.md` — binding visual authority for any DESIGN.md work; not detailed further here per init scope (palette, type, and component decisions belong in DESIGN.md, not PRODUCT.md).
 
 ## Evidence on Hand
 
-- Brand Book: `docs/brand/BrandBook_EUMEDICAL_LOW.pdf`.
+- Brand Book: provided by Eumedical for the process (not included in this repo — confidential company material).
 - Real content and trust metrics sourced from the live `eumedical.es` site: 90k patients, 250 doctors, 70k prescriptions, 10 specialties, 4.9/5 rating.
 - `design-reference.html` is the original audited reference implementation of both surfaces (see README.md sections 1–3 and 5 for design rationale and the Impeccable before/after audit); `src/` is the current, delivered React implementation.
 - No real photo library, testimonials, case studies, or press on hand — future work must not fabricate these.

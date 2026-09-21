@@ -35,4 +35,4 @@ This guide captures the non-negotiable visual and interaction rules that the pro
 - Do not compromise the real Eumedical brand book for tool heuristics alone
 
 ## Source of truth
-Use the Brand Book PDF in `docs/brand/BrandBook_EUMEDICAL_LOW.pdf` as the authoritative reference for visual details. This rules file is the working summary for product decisions and implementation reviews.
+Use the Brand Book PDF provided by Eumedical for the hiring process (not included in this repo — confidential company material) as the authoritative reference for visual details. This rules file is the working summary for product decisions and implementation reviews.
