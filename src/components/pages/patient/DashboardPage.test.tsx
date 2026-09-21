@@ -52,4 +52,12 @@ describe('DashboardPage', () => {
     renderDashboard()
     expect(screen.getByText('No tienes próximas consultas.')).toBeInTheDocument()
   })
+
+  it('cancels an upcoming appointment from its compact card', () => {
+    renderDashboard()
+
+    fireEvent.click(screen.getAllByRole('button', { name: 'Cancelar' })[0])
+
+    expect(toast.success).toHaveBeenCalledWith('Consulta cancelada.')
+  })
 })

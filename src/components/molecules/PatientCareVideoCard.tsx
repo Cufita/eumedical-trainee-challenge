@@ -42,7 +42,9 @@ export function PatientCareVideoCard({ slide, local }: PatientCareVideoCardProps
     const node = videoRef.current;
     if (!node) return;
     if (shouldPlay) {
-      node.play().catch(() => {});
+      // play() can return undefined instead of a Promise (jsdom, some older
+      // browsers) — optional chaining keeps this safe in both cases.
+      node.play()?.catch(() => {});
     } else {
       node.pause();
     }

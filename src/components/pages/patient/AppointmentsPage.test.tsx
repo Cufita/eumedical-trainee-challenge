@@ -69,4 +69,12 @@ describe('AppointmentsPage', () => {
       'No se pudo conectar con la videollamada de Dra. Ana Torres: esta es una demo sin backend real.',
     )
   })
+
+  it('shows a stub message when scheduling a new appointment', () => {
+    render(<AppointmentsPage />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Nueva consulta' }))
+
+    expect(toast).toHaveBeenCalledWith('Función de agendar próximamente disponible.')
+  })
 })

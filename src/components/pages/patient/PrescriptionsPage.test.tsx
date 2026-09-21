@@ -35,6 +35,15 @@ describe('PrescriptionsPage', () => {
     expect(toast.success).toHaveBeenCalledWith('Solicitud de renovación enviada para Ramipril 5 mg.')
   })
 
+  it('shows the prescription details', () => {
+    render(<PrescriptionsPage />)
+
+    const row = screen.getByText('Ramipril 5 mg').closest('tr')!
+    fireEvent.click(within(row).getByRole('button', { name: 'Ver detalles' }))
+
+    expect(toast).toHaveBeenCalledWith('Detalles de Ramipril 5 mg')
+  })
+
   it('shows an empty state when there are no prescriptions', () => {
     usePatientStore.setState({ prescriptions: [] })
     render(<PrescriptionsPage />)

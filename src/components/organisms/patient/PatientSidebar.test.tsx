@@ -54,4 +54,49 @@ describe('Patient area sidebar navigation', () => {
     },
     TEST_TIMEOUT,
   )
+
+  it(
+    'switches to the Estudios panel when its nav item is clicked',
+    async () => {
+      render(
+        <MemoryRouter initialEntries={['/paciente']}>
+          <App />
+        </MemoryRouter>,
+      )
+      fireEvent.click(await screen.findByRole('link', { name: 'Estudios' }, FIND_OPTIONS))
+      expect(await screen.findByRole('heading', { name: 'Estudios' }, FIND_OPTIONS)).toBeInTheDocument()
+      expect(screen.getByText('Informes, imágenes y resultados de laboratorio')).toBeInTheDocument()
+    },
+    TEST_TIMEOUT,
+  )
+
+  it(
+    'switches to the Perfil panel when its nav item is clicked',
+    async () => {
+      render(
+        <MemoryRouter initialEntries={['/paciente']}>
+          <App />
+        </MemoryRouter>,
+      )
+      fireEvent.click(await screen.findByRole('link', { name: 'Perfil' }, FIND_OPTIONS))
+      expect(await screen.findByRole('heading', { name: 'Perfil' }, FIND_OPTIONS)).toBeInTheDocument()
+    },
+    TEST_TIMEOUT,
+  )
+
+  it(
+    'switches to the Soporte panel when its nav item is clicked',
+    async () => {
+      render(
+        <MemoryRouter initialEntries={['/paciente']}>
+          <App />
+        </MemoryRouter>,
+      )
+      fireEvent.click(await screen.findByRole('link', { name: 'Soporte' }, FIND_OPTIONS))
+      expect(await screen.findByRole('heading', { name: 'Soporte' }, FIND_OPTIONS)).toBeInTheDocument()
+      expect(screen.getByText('Canales de atención al paciente')).toBeInTheDocument()
+    },
+    TEST_TIMEOUT,
+  )
+
 })
