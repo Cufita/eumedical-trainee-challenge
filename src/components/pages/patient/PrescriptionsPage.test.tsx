@@ -19,17 +19,17 @@ describe('PrescriptionsPage', () => {
   it('lists prescriptions with their status', () => {
     render(<PrescriptionsPage />)
 
-    const activeRow = screen.getByText('Ramipril 5 mg').closest('tr')!
+    const activeRow = screen.getByText('Ramipril 5 mg').closest('article')!
     expect(within(activeRow).getByText('Activa')).toBeInTheDocument()
 
-    const expiredRow = screen.getByText('Metformina 850 mg').closest('tr')!
+    const expiredRow = screen.getByText('Metformina 850 mg').closest('article')!
     expect(within(expiredRow).getByText('Vencida')).toBeInTheDocument()
   })
 
   it('requests a renewal for a prescription', () => {
     render(<PrescriptionsPage />)
 
-    const row = screen.getByText('Ramipril 5 mg').closest('tr')!
+    const row = screen.getByText('Ramipril 5 mg').closest('article')!
     fireEvent.click(within(row).getByRole('button', { name: 'Solicitar' }))
 
     expect(toast.success).toHaveBeenCalledWith('Solicitud de renovación enviada para Ramipril 5 mg.')
@@ -38,7 +38,7 @@ describe('PrescriptionsPage', () => {
   it('shows the prescription details', () => {
     render(<PrescriptionsPage />)
 
-    const row = screen.getByText('Ramipril 5 mg').closest('tr')!
+    const row = screen.getByText('Ramipril 5 mg').closest('article')!
     fireEvent.click(within(row).getByRole('button', { name: 'Ver detalles' }))
 
     expect(toast).toHaveBeenCalledWith('Detalles de Ramipril 5 mg')

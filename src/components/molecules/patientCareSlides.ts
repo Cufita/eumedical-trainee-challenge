@@ -21,7 +21,7 @@ export interface PatientCareSlide {
   poster: string;
 }
 
-// Ids map to patientCare.slides.* keys in src/i18n/locales — copy lives
+// Ids map to services.slides.* keys in src/i18n/locales — copy lives
 // there now (see the ES bundle for the ported eumedical.es original text).
 export const patientCareSlideAssets: PatientCareSlideAsset[] = [
   {

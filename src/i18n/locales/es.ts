@@ -15,10 +15,10 @@ export const es = {
   },
   nav: {
     ariaLabel: "Principal",
-    pacientes: "Pacientes",
+    servicios: "Servicios",
     comoFunciona: "Cómo funciona",
     nosotros: "Nosotros",
-    servicios: "Servicios",
+    catalogo: "Catálogo",
     cobertura: "Cobertura",
     testimonios: "Opiniones",
   },
@@ -35,7 +35,7 @@ export const es = {
     countries: "países",
     languages: "idiomas",
   },
-  patientCare: {
+  services: {
     eyebrow: "Cómo cuidamos a tus pacientes",
     title: "Todo lo que tus pacientes necesitan, coordinado por nosotros",
     description:
@@ -109,8 +109,8 @@ export const es = {
       "Ponemos a disposición de nuestros partners el acceso al Know How local en más de 80 países con un enfoque holístico en todos los casos que gestionamos, traduciéndose en una experiencia de cliente única a través de un servicio sobresaliente.",
     imageAlt: "Equipo médico internacional coordinado por Eumedical",
   },
-  services: {
-    eyebrow: "Servicios",
+  catalog: {
+    eyebrow: "Catálogo",
     title: "Un catálogo completo de asistencia médica",
     items: {
       fitToFly: {

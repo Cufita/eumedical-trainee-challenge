@@ -8,7 +8,7 @@ const MAX_PEEK_LAYERS = 2;
 // scroll brings them up to the front.
 const SCALE_STEP = 0.055;
 // Exiting cards must clear well past the tallest card size before they're
-// considered gone — see PatientCareOrganism's card box sizing.
+// considered gone — see ServicesOrganism's card box sizing.
 const EXIT_DISTANCE_PX = 1200;
 
 interface PatientCareVideoCardProps {

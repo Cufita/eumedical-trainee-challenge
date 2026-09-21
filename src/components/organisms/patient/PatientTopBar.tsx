@@ -17,7 +17,7 @@ export function PatientTopBar() {
   const firstName = fullName.split(' ')[0]
 
   return (
-    <header className="flex items-center justify-between bg-white border-b border-mist px-6 py-3.5">
+    <header className="sticky top-0 z-40 flex items-center justify-between bg-white border-b border-mist px-6 py-3.5">
       <div className="flex items-center gap-2 font-display font-semibold text-xl text-navy">
         <Cross /> eumedical
       </div>

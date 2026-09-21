@@ -5,6 +5,7 @@ import { useShallow } from 'zustand/react/shallow'
 import { ActionButton } from '../../atoms/Button'
 import { Tag } from '../../atoms/Tag'
 import { PageHeader } from '../../molecules/patient/PageHeader'
+import { StudyCard } from '../../molecules/patient/StudyCard'
 import { FilterDropdown } from '../../molecules/FilterDropdown'
 import { Table, type Column } from '../../molecules/Table'
 import { Pagination } from '../../molecules/Pagination'
@@ -99,7 +100,13 @@ export function StudiesPage() {
         />
         <FilterDropdown label="Doctor" value={doctorFilter} onChange={updateFilter(setDoctorFilter)} options={doctorOptions} />
       </div>
-      <Table columns={columns} rows={paged} rowKey={(s) => s.id} emptyMessage="No se encontraron estudios con estos filtros." />
+      <Table
+        columns={columns}
+        rows={paged}
+        rowKey={(s) => s.id}
+        renderMobileCard={(s) => <StudyCard study={s} />}
+        emptyMessage="No se encontraron estudios con estos filtros."
+      />
       {filtered.length > 0 && (
         <Pagination page={page} pageSize={PAGE_SIZE} totalItems={filtered.length} itemLabel="estudios" onPageChange={setPage} />
       )}

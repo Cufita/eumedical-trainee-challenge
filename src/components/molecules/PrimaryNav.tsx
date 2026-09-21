@@ -5,10 +5,10 @@ import { LanguageSwitcher } from "../atoms/LanguageSwitcher";
 // Ordered to match the sections' order down the page, so the nav reads as
 // a table of contents for the whole site, not an arbitrary shortlist.
 const links = [
-  { href: "#eu-cuidado-pacientes", key: "pacientes" },
+  { href: "#eu-servicios", key: "servicios" },
   { href: "#eu-como", key: "comoFunciona" },
   { href: "#eu-nosotros", key: "nosotros" },
-  { href: "#eu-servicios", key: "servicios" },
+  { href: "#eu-catalogo", key: "catalogo" },
   { href: "#eu-cobertura", key: "cobertura" },
   { href: "#eu-testimonios", key: "testimonios" },
 ] as const;

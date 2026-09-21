@@ -2,6 +2,7 @@ import toast from 'react-hot-toast'
 import { ActionButton } from '../../atoms/Button'
 import { Tag } from '../../atoms/Tag'
 import { PageHeader } from '../../molecules/patient/PageHeader'
+import { PrescriptionCard } from '../../molecules/patient/PrescriptionCard'
 import { Table, type Column } from '../../molecules/Table'
 import { usePatientStore } from '../../../store/patientStore'
 import { useDocumentTitle } from '../../../hooks/useDocumentTitle'
@@ -45,7 +46,13 @@ export function PrescriptionsPage() {
   return (
     <section>
       <PageHeader title="Recetas y medicación" subtitle="Prescripciones y tratamientos" />
-      <Table columns={columns} rows={prescriptions} rowKey={(rx) => rx.id} emptyMessage="No tienes recetas registradas." />
+      <Table
+        columns={columns}
+        rows={prescriptions}
+        rowKey={(rx) => rx.id}
+        renderMobileCard={(rx) => <PrescriptionCard prescription={rx} />}
+        emptyMessage="No tienes recetas registradas."
+      />
     </section>
   )
 }

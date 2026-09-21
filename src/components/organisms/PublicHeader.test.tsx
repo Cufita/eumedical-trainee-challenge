@@ -6,10 +6,10 @@ import { PublicHeader } from './PublicHeader'
 describe('PublicHeader', () => {
   it('renders a navigation link for every section of the page', () => {
     render(<PublicHeader />)
-    expect(screen.getByRole('link', { name: 'Pacientes' })).toHaveAttribute('href', '#eu-cuidado-pacientes')
+    expect(screen.getByRole('link', { name: 'Servicios' })).toHaveAttribute('href', '#eu-servicios')
     expect(screen.getByRole('link', { name: 'Cómo funciona' })).toHaveAttribute('href', '#eu-como')
     expect(screen.getByRole('link', { name: 'Nosotros' })).toHaveAttribute('href', '#eu-nosotros')
-    expect(screen.getByRole('link', { name: 'Servicios' })).toHaveAttribute('href', '#eu-servicios')
+    expect(screen.getByRole('link', { name: 'Catálogo' })).toHaveAttribute('href', '#eu-catalogo')
     expect(screen.getByRole('link', { name: 'Cobertura' })).toHaveAttribute('href', '#eu-cobertura')
     expect(screen.getByRole('link', { name: 'Opiniones' })).toHaveAttribute('href', '#eu-testimonios')
   })

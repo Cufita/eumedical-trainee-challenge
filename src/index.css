@@ -276,7 +276,7 @@
     }
     /* Navy dots read as invisible over the globe's dark ocean gradient. */
     .loading-dots--inverted span {
-      background: #fff;
+      background: var(--color-white);
     }
     @keyframes loading-dot-bounce {
       0%,

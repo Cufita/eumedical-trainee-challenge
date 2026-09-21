@@ -16,19 +16,19 @@ export function PublicFooter() {
           <div className="flex gap-10">
             <div>
               <h3 className="font-display text-sm text-white">{t("footer.servicesHeading")}</h3>
-              <a className="mt-3 block text-sm" href="#eu-servicios">
+              <a className="mt-3 block text-sm text-white/70 hover:text-white" href="#eu-catalogo">
                 {t("footer.catalog")}
               </a>
-              <a className="block text-sm" href="#eu-como">
+              <a className="block text-sm text-white/70 hover:text-white" href="#eu-como">
                 {t("footer.howItWorks")}
               </a>
             </div>
             <div>
               <h3 className="font-display text-sm text-white">{t("footer.companyHeading")}</h3>
-              <a className="mt-3 block text-sm" href="#eu-nosotros">
+              <a className="mt-3 block text-sm text-white/70 hover:text-white" href="#eu-nosotros">
                 {t("footer.aboutUs")}
               </a>
-              <a className="block text-sm" href="#eu-contacto">
+              <a className="block text-sm text-white/70 hover:text-white" href="#eu-contacto">
                 {t("footer.contact")}
               </a>
             </div>

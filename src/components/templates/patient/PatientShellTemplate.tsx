@@ -30,7 +30,7 @@ export function PatientShellTemplate() {
         style={{ '--sidebar-w': collapsed ? '76px' : '240px' } as CSSProperties}
       >
         <PatientSidebar collapsed={collapsed} onToggleCollapsed={() => setCollapsed((c) => !c)} />
-        <main className="p-8.5 px-(--edge) w-full">
+        <main className="p-8.5 px-(--edge) w-full max-md:pb-[calc(4.5rem+env(safe-area-inset-bottom))]">
           <Outlet />
         </main>
       </div>

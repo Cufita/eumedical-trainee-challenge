@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 
 export interface Column<T> {
   key: string
@@ -11,17 +12,33 @@ export function Table<T>({
   columns,
   rows,
   rowKey,
+  renderMobileCard,
   emptyMessage = 'No hay resultados.',
 }: {
   columns: Column<T>[]
   rows: T[]
   rowKey: (row: T) => string
+  // Below md, rows render through this instead of the table — table rows
+  // squeeze onto a phone screen far worse than columns ever stack.
+  renderMobileCard?: (row: T) => ReactNode
   emptyMessage?: string
 }) {
+  const isDesktop = useMediaQuery('(min-width: 768px)')
+
   if (rows.length === 0) {
     return (
       <div className="text-center py-14 px-5 border-[1.5px] border-dashed border-sage-pale rounded-[20px] text-slate">
         {emptyMessage}
+      </div>
+    )
+  }
+
+  if (renderMobileCard && !isDesktop) {
+    return (
+      <div className="grid gap-3">
+        {rows.map((row) => (
+          <div key={rowKey(row)}>{renderMobileCard(row)}</div>
+        ))}
       </div>
     )
   }
