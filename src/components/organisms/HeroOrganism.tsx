@@ -1,9 +1,31 @@
+import { lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { AnchorButton } from "../atoms/Button";
 import { Container } from "../atoms/Container";
 import { Cross } from "../atoms/Cross";
 import { Highlighter } from "../atoms/Highlighter";
-import { Globe } from "../atoms/Globe";
+
+// three (the WebGL globe's only real dependency) is ~560kB minified on its
+// own — more than the rest of the public site combined. Splitting it into
+// its own lazy chunk keeps that weight off the critical path for the hero's
+// text and CTAs, which don't need it to be interactive.
+const Globe = lazy(() => import("../atoms/Globe").then((m) => ({ default: m.Globe })));
+
+// Reserves the globe's footprint and hints at what's coming (an ocean-toned
+// orb, from the same tokens Globe.tsx reads for its own fill colors) instead
+// of leaving a blank gap while the three.js chunk downloads.
+function GlobePlaceholder() {
+  return (
+    <div
+      aria-hidden="true"
+      className="mx-auto aspect-square w-full max-w-[640px] rounded-full opacity-60"
+      style={{
+        background:
+          "radial-gradient(circle at 35% 32%, var(--color-globe-ocean-mid), var(--color-globe-ocean-dark) 72%)",
+      }}
+    />
+  );
+}
 
 export function HeroOrganism() {
   const { t } = useTranslation();
@@ -41,7 +63,9 @@ export function HeroOrganism() {
           </div>
         </div>
         <div className="relative min-h-[540px] py-8 md:min-h-[620px]">
-          <Globe />
+          <Suspense fallback={<GlobePlaceholder />}>
+            <Globe />
+          </Suspense>
         </div>
       </Container>
     </section>
