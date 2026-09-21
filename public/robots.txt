@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /paciente
+
+Sitemap: https://www.eumedical.es/sitemap.xml

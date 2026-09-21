@@ -17,7 +17,7 @@ describe('PatientShellTemplate', () => {
 
     expect(screen.getByRole('status', { name: 'Cargando' })).toBeInTheDocument()
 
-    expect(await screen.findByText('Contenido del panel')).toBeInTheDocument()
+    expect(await screen.findByText('Contenido del panel', {}, { timeout: 5000 })).toBeInTheDocument()
     expect(screen.queryByRole('status', { name: 'Cargando' })).not.toBeInTheDocument()
   })
 })

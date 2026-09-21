@@ -16,17 +16,24 @@ function getInitialLanguage(): SupportedLanguage {
   return "es";
 }
 
+const initialLanguage = getInitialLanguage();
+
 void i18n.use(initReactI18next).init({
   resources: {
     es: { translation: es },
     en: { translation: en },
   },
-  lng: getInitialLanguage(),
+  lng: initialLanguage,
   fallbackLng: "es",
   interpolation: { escapeValue: false },
 });
 
+// Keeps <html lang> truthful for screen readers and search engines — without
+// this it stays hardcoded to "es" from index.html even after switching to EN.
+document.documentElement.lang = initialLanguage;
+
 i18n.on("languageChanged", (language) => {
+  document.documentElement.lang = language;
   try {
     window.localStorage.setItem(STORAGE_KEY, language);
   } catch {
