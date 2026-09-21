@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { AnchorButton, LinkButton } from "../../shared/Button";
+import { useTranslation } from "react-i18next";
+import { AnchorButton } from "../../shared/Button";
 import { BrandMark } from "../atoms/BrandMark";
+import { LanguageSwitcher } from "../atoms/LanguageSwitcher";
 import { PrimaryNav } from "../molecules/PrimaryNav";
 
 export function PublicHeader() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -61,16 +64,14 @@ export function PublicHeader() {
         </a>
         <PrimaryNav open={open} mounted={mounted} onNavigate={() => setOpen(false)} />
         <div className="relative z-[1] ml-auto hidden items-center gap-3 md:flex">
-          <LinkButton to="/paciente" variant="outline">
-            Área paciente
-          </LinkButton>
+          <LanguageSwitcher />
           <AnchorButton href="#eu-contacto" variant="gold">
-            Solicitar una demo
+            {t("common.requestDemo")}
           </AnchorButton>
         </div>
         <button
           type="button"
-          aria-label={open ? "Cerrar menú" : "Abrir menú"}
+          aria-label={open ? t("header.closeMenu") : t("header.openMenu")}
           aria-expanded={open}
           aria-controls="eu-mobile-nav"
           onClick={() => setOpen((value) => !value)}

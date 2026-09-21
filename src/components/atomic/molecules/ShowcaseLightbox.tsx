@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Cross } from "../../shared/Cross";
 import type { HowItWorksStep } from "./howItWorksSteps";
@@ -12,6 +13,7 @@ interface ShowcaseLightboxProps {
 }
 
 export function ShowcaseLightbox({ steps, active, onSelect, onClose }: ShowcaseLightboxProps) {
+  const { t } = useTranslation();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const step = steps[active];
 
@@ -41,7 +43,7 @@ export function ShowcaseLightbox({ steps, active, onSelect, onClose }: ShowcaseL
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={`Vista ampliada — ${step.imageLabel}`}
+      aria-label={t("howItWorks.expandedView", { label: step.imageLabel })}
       className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-8"
     >
       <div
@@ -54,7 +56,7 @@ export function ShowcaseLightbox({ steps, active, onSelect, onClose }: ShowcaseL
         type="button"
         ref={closeButtonRef}
         onClick={onClose}
-        aria-label="Cerrar vista ampliada"
+        aria-label={t("howItWorks.closeExpanded")}
         className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors duration-200 hover:bg-white/20 sm:right-6 sm:top-6"
       >
         <X size={20} />
@@ -63,7 +65,7 @@ export function ShowcaseLightbox({ steps, active, onSelect, onClose }: ShowcaseL
       <button
         type="button"
         onClick={() => onSelect((active - 1 + steps.length) % steps.length)}
-        aria-label="Paso anterior"
+        aria-label={t("howItWorks.previousStep")}
         className="absolute left-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors duration-200 hover:bg-white/20 sm:left-6"
       >
         <ChevronLeft size={22} />
@@ -71,7 +73,7 @@ export function ShowcaseLightbox({ steps, active, onSelect, onClose }: ShowcaseL
       <button
         type="button"
         onClick={() => onSelect((active + 1) % steps.length)}
-        aria-label="Paso siguiente"
+        aria-label={t("howItWorks.nextStep")}
         className="absolute right-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors duration-200 hover:bg-white/20 sm:right-6"
       >
         <ChevronRight size={22} />
@@ -88,9 +90,9 @@ export function ShowcaseLightbox({ steps, active, onSelect, onClose }: ShowcaseL
         <div className="relative aspect-[2560/1680] w-full overflow-hidden bg-navy-2">
           {steps.map((s, index) => (
             <img
-              key={s.title}
+              key={s.id}
               src={s.image}
-              alt={`Área paciente eumedical — ${s.imageLabel}`}
+              alt={t("howItWorks.patientAreaImageAlt", { label: s.imageLabel })}
               className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-500 ease-in-out ${
                 index === active ? "opacity-100" : "opacity-0"
               }`}
@@ -104,7 +106,7 @@ export function ShowcaseLightbox({ steps, active, onSelect, onClose }: ShowcaseL
           <div className="mt-2 grid max-w-[62ch]">
             {steps.map((s) => (
               <p
-                key={`size-${s.title}`}
+                key={`size-${s.id}`}
                 aria-hidden="true"
                 className="invisible col-start-1 row-start-1 text-[14px] leading-[1.6]"
               >
@@ -119,10 +121,10 @@ export function ShowcaseLightbox({ steps, active, onSelect, onClose }: ShowcaseL
           <div className="mt-5 flex items-center gap-2">
             {steps.map((s, index) => (
               <button
-                key={s.title}
+                key={s.id}
                 type="button"
                 onClick={() => onSelect(index)}
-                aria-label={`Ir a ${s.title}`}
+                aria-label={t("howItWorks.goToStep", { label: s.title })}
                 aria-current={index === active}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
                   index === active ? "w-6 bg-gold" : "w-1.5 bg-white/25 hover:bg-white/40"

@@ -1,5 +1,6 @@
 import type { MouseEventHandler } from "react";
 import { Maximize2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Cross } from "../../shared/Cross";
 import type { HowItWorksStep } from "./howItWorksSteps";
 
@@ -18,6 +19,8 @@ export function PatientAppShowcase({
   onMouseLeave,
   onExpand,
 }: PatientAppShowcaseProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="relative md:h-full">
       <div
@@ -39,14 +42,14 @@ export function PatientAppShowcase({
         <button
           type="button"
           onClick={onExpand}
-          aria-label={`Ver en grande: ${steps[active].imageLabel}`}
+          aria-label={t("howItWorks.viewLarge", { label: steps[active].imageLabel })}
           className="group/expand relative aspect-[12/5] w-full cursor-zoom-in overflow-hidden bg-navy-2 md:aspect-auto md:min-h-0 md:flex-1"
         >
           {steps.map((step, index) => (
             <img
-              key={step.title}
+              key={step.id}
               src={step.image}
-              alt={`Área paciente eumedical — ${step.imageLabel}`}
+              alt={t("howItWorks.patientAreaImageAlt", { label: step.imageLabel })}
               className={`showcase-frame absolute inset-0 h-full w-full object-cover object-left-top transition-opacity duration-700 ease-in-out ${
                 index === active ? "opacity-100" : "opacity-0"
               }`}

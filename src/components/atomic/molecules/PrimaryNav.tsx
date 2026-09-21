@@ -1,10 +1,12 @@
-import { LinkButton, AnchorButton } from "../../shared/Button";
+import { useTranslation } from "react-i18next";
+import { AnchorButton } from "../../shared/Button";
+import { LanguageSwitcher } from "../atoms/LanguageSwitcher";
 
 const links = [
-  ["#eu-servicios", "Servicios"],
-  ["#eu-como", "Cómo funciona"],
-  ["#eu-cobertura", "Cobertura"],
-  ["#eu-nosotros", "Nosotros"],
+  { href: "#eu-servicios", key: "servicios" },
+  { href: "#eu-como", key: "comoFunciona" },
+  { href: "#eu-cobertura", key: "cobertura" },
+  { href: "#eu-nosotros", key: "nosotros" },
 ] as const;
 
 export function PrimaryNav({
@@ -16,17 +18,18 @@ export function PrimaryNav({
   mounted: boolean;
   onNavigate: () => void;
 }) {
+  const { t } = useTranslation();
   const showSheet = open || mounted;
 
   return (
     <nav
       id="eu-mobile-nav"
-      aria-label="Principal"
+      aria-label={t("nav.ariaLabel")}
       className={`absolute left-4 right-4 top-[calc(100%+12px)] z-[1] flex-col gap-0.5 rounded-2xl border border-navy/10 bg-white p-3 shadow-[0_24px_60px_-16px_rgba(30,72,101,.28)] transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none md:static md:flex md:flex-1 md:translate-y-0 md:flex-row md:items-center md:justify-center md:gap-7 md:border-0 md:bg-transparent md:p-0 md:opacity-100 md:shadow-none ${
         showSheet ? "flex" : "hidden"
       } ${open ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"}`}
     >
-      {links.map(([href, label], index) => (
+      {links.map(({ href, key }, index) => (
         <a
           key={href}
           href={href}
@@ -36,15 +39,13 @@ export function PrimaryNav({
             open ? "max-md:translate-x-0 max-md:opacity-100" : "max-md:translate-x-2 max-md:opacity-0"
           }`}
         >
-          {label}
+          {t(`nav.${key}`)}
         </a>
       ))}
       <div className="mt-2 flex flex-col gap-2.5 border-t border-navy/10 pt-3 md:hidden">
-        <LinkButton to="/paciente" variant="outline">
-          Área paciente
-        </LinkButton>
+        <LanguageSwitcher className="self-start" />
         <AnchorButton href="#eu-contacto" variant="gold">
-          Solicitar una demo
+          {t("common.requestDemo")}
         </AnchorButton>
       </div>
     </nav>

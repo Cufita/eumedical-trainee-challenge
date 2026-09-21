@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface NumberTickerProps {
   value: number;
@@ -9,10 +10,10 @@ interface NumberTickerProps {
   className?: string;
 }
 
-function formatValue(value: number, decimals: number) {
+function formatValue(value: number, decimals: number, locale: string) {
   return decimals > 0
     ? value.toFixed(decimals)
-    : Math.round(value).toLocaleString("es-ES");
+    : Math.round(value).toLocaleString(locale);
 }
 
 /**
@@ -29,6 +30,8 @@ export function NumberTicker({
   duration = 1600,
   className = "",
 }: NumberTickerProps) {
+  const { i18n } = useTranslation();
+  const locale = i18n.resolvedLanguage === "en" ? "en-US" : "es-ES";
   const ref = useRef<HTMLSpanElement>(null);
   const [display, setDisplay] = useState(0);
 
@@ -74,12 +77,12 @@ export function NumberTicker({
     <span className={className}>
       <span aria-hidden="true" ref={ref}>
         {prefix}
-        {formatValue(display, decimals)}
+        {formatValue(display, decimals, locale)}
         {suffix}
       </span>
       <span className="sr-only">
         {prefix}
-        {formatValue(value, decimals)}
+        {formatValue(value, decimals, locale)}
         {suffix}
       </span>
     </span>

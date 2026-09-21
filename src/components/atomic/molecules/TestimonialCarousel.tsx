@@ -1,16 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Globe, HeartHandshake, Headset, Star, Video, type LucideIcon } from "lucide-react";
 import { ArrowIcon } from "../atoms/ArrowIcon";
 import { Cross } from "../../shared/Cross";
 
 type Direction = 1 | -1;
 
-// Verbatim reviews published on eumedical.es's own testimonial slider
-// (no reviewer names or per-review ratings are shown there — only the
-// aggregate 4.9/5 already covered in TrustMetricsOrganism — so `name` here is
-// an illustrative first name, not the real reviewer's; the small photo next
-// to each is a placeholder headshot too).
-const testimonials: Array<{
+interface TestimonialData {
+  id: string;
   name: string;
   photo: string;
   quote: string;
@@ -18,62 +15,42 @@ const testimonials: Array<{
   rating: number;
   tag: string;
   icon: LucideIcon;
+}
+
+// Verbatim reviews published on eumedical.es's own testimonial slider
+// (no reviewer names or per-review ratings are shown there — only the
+// aggregate 4.9/5 already covered in TrustMetricsOrganism — so `name` here is
+// an illustrative first name, not the real reviewer's; the small photo next
+// to each is a placeholder headshot too). Quote/source/tag copy lives in
+// src/i18n/locales under testimonials.items.<id> — kept verbatim in es.ts.
+const testimonialAssets: Array<{
+  id: string;
+  name: string;
+  photo: string;
+  rating: number;
+  icon: LucideIcon;
 }> = [
-  {
-    name: "Lucía Fernández",
-    photo: "/testimonials/reviewer-patient.jpg",
-    quote:
-      "“Excelente atención de la Dra. Maria Soledad Acosta. Es la tercera vez que contrato con ustedes para mis viajes al exterior y la segunda que utilizo el servicio médico. Siempre con respuesta inmediata y eso hace que den un óptimo servicio. Muchas gracias.”",
-    source: "Encuesta de valoración de servicio",
-    rating: 5,
-    tag: "Consulta virtual",
-    icon: Video,
-  },
-  {
-    name: "Martín Rodríguez",
-    photo: "/testimonials/reviewer-travel.jpg",
-    quote:
-      "“Excelente servicio. Tuve un accidente en Jamaica y contacté a la asistencia. La central me respondió de forma oportuna: me dieron servicio de telemedicina y la doctora me dio tranquilidad al manejar mi caso.”",
-    source: "Encuesta de valoración de servicio",
-    rating: 5,
-    tag: "Asistencia en viaje",
-    icon: Globe,
-  },
-  {
-    name: "Sofía Herrera",
-    photo: "/testimonials/reviewer-family.jpg",
-    quote:
-      "“Excelente servicio. Tuve una dificultad en un oído y en el transcurso del día, desde el seguro me pusieron en contacto con un asesor que confirmó una visita a mi domicilio. El médico llegó en el horario establecido, fue excelente y profesional: resolvió mi situación con amabilidad y fue muy atento y cuidadoso.”",
-    source: "Encuesta de valoración de servicio",
-    rating: 5,
-    tag: "Visita a domicilio",
-    icon: HeartHandshake,
-  },
-  {
-    name: "Valentina Duarte",
-    photo: "/testimonials/reviewer-operations.jpg",
-    quote:
-      "“La experiencia fue excelente por la rapidez y eficiencia con la que se resolvió la consulta. La asistencia brindada por la médica a la que fui derivada en España, donde estoy de viaje, fue efectiva, amigable y resolvió el problema por el que consulté.”",
-    source: "Encuesta de valoración de servicio",
-    rating: 5,
-    tag: "Coordinación 24/7",
-    icon: Headset,
-  },
-  {
-    name: "Emily Carter",
-    photo: "/testimonials/reviewer-international.jpg",
-    quote: "“It's been effective and proper for the situation.”",
-    source: "Service feedback survey",
-    rating: 5,
-    tag: "Paciente internacional",
-    icon: Globe,
-  },
+  { id: "lucia", name: "Lucía Fernández", photo: "/testimonials/reviewer-patient.jpg", rating: 5, icon: Video },
+  { id: "martin", name: "Martín Rodríguez", photo: "/testimonials/reviewer-travel.jpg", rating: 5, icon: Globe },
+  { id: "sofia", name: "Sofía Herrera", photo: "/testimonials/reviewer-family.jpg", rating: 5, icon: HeartHandshake },
+  { id: "valentina", name: "Valentina Duarte", photo: "/testimonials/reviewer-operations.jpg", rating: 5, icon: Headset },
 ];
 
 const TRANSITION_MS = 640;
 const AUTOPLAY_MS = 6000;
 
 export function TestimonialCarousel() {
+  const { t } = useTranslation();
+  const testimonials: TestimonialData[] = useMemo(
+    () =>
+      testimonialAssets.map((asset) => ({
+        ...asset,
+        quote: t(`testimonials.items.${asset.id}.quote`),
+        source: t(`testimonials.items.${asset.id}.source`),
+        tag: t(`testimonials.items.${asset.id}.tag`),
+      })),
+    [t],
+  );
   const [index, setIndex] = useState(0);
   const [outgoing, setOutgoing] = useState<{ index: number; direction: Direction } | null>(
     null,
@@ -135,10 +112,17 @@ export function TestimonialCarousel() {
   return (
     <div
       role="group"
-      aria-roledescription="carrusel"
-      aria-label="Opiniones de pacientes"
+      aria-roledescription={t("testimonials.ariaRoleDescription")}
+      aria-label={t("testimonials.ariaLabel")}
       className="mx-auto max-w-[720px]"
-      onFocus={() => setIsPaused(true)}
+      onFocus={(event) => {
+        // Only pause for keyboard focus, not a mouse click landing on the
+        // arrow buttons — a click shouldn't stall autoplay until the user
+        // clicks elsewhere.
+        if (event.target.matches(":focus-visible")) {
+          setIsPaused(true);
+        }
+      }}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
           setIsPaused(false);
@@ -146,9 +130,9 @@ export function TestimonialCarousel() {
       }}
     >
       <div className="testimonial-stage">
-        {testimonials.map((data, item) => (
+        {testimonials.map((data) => (
           <div
-            key={`size-${item}`}
+            key={`size-${data.id}`}
             aria-hidden="true"
             className="testimonial-pane invisible pointer-events-none"
           >
@@ -179,15 +163,23 @@ export function TestimonialCarousel() {
         </div>
       </div>
       <div className="mt-10 flex items-center justify-center gap-6">
+        <button
+          type="button"
+          aria-label={t("testimonials.previous")}
+          onClick={() => goTo((index - 1 + total) % total, -1)}
+          className="flex size-10 shrink-0 items-center justify-center rounded-full border border-navy/20 text-navy hover:bg-navy hover:text-white"
+        >
+          <ArrowIcon direction="left" />
+        </button>
         <div
           className="flex gap-2"
-          aria-label={`Opinión ${index + 1} de ${testimonials.length}`}
+          aria-label={t("testimonials.paginationAriaLabel", { current: index + 1, total: testimonials.length })}
         >
-          {testimonials.map((_, item) => (
+          {testimonials.map((data, item) => (
             <button
-              key={item}
+              key={data.id}
               type="button"
-              aria-label={`Mostrar opinión ${item + 1}`}
+              aria-label={t("testimonials.showTestimonial", { number: item + 1 })}
               aria-current={item === index}
               onClick={() => goTo(item, item > index ? 1 : -1)}
               className={`relative h-2 overflow-hidden rounded-full bg-navy/20 transition-[width] duration-300 ${
@@ -208,30 +200,21 @@ export function TestimonialCarousel() {
             </button>
           ))}
         </div>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            aria-label="Opinión anterior"
-            onClick={() => goTo((index - 1 + total) % total, -1)}
-            className="flex size-10 items-center justify-center rounded-full border border-navy/20 text-navy hover:bg-navy hover:text-white"
-          >
-            <ArrowIcon direction="left" />
-          </button>
-          <button
-            type="button"
-            aria-label="Opinión siguiente"
-            onClick={() => goTo((index + 1) % total, 1)}
-            className="flex size-10 items-center justify-center rounded-full border border-navy/20 text-navy hover:bg-navy hover:text-white"
-          >
-            <ArrowIcon />
-          </button>
-        </div>
+        <button
+          type="button"
+          aria-label={t("testimonials.next")}
+          onClick={() => goTo((index + 1) % total, 1)}
+          className="flex size-10 shrink-0 items-center justify-center rounded-full border border-navy/20 text-navy hover:bg-navy hover:text-white"
+        >
+          <ArrowIcon />
+        </button>
       </div>
     </div>
   );
 }
 
-function TestimonialCard({ data }: { data: (typeof testimonials)[number] }) {
+function TestimonialCard({ data }: { data: TestimonialData }) {
+  const { t } = useTranslation();
   const Icon = data.icon;
   return (
     <div className="flex flex-col items-center text-center">
@@ -253,7 +236,7 @@ function TestimonialCard({ data }: { data: (typeof testimonials)[number] }) {
             <div
               className="flex gap-0.5 text-gold"
               role="img"
-              aria-label={`${data.rating} de 5 estrellas`}
+              aria-label={t("trustMetrics.ratingAriaLabel", { rating: data.rating })}
             >
               {Array.from({ length: data.rating }).map((_, item) => (
                 <Star key={item} size={13} fill="currentColor" strokeWidth={0} />

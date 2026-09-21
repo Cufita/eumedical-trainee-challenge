@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { AnchorButton } from "../../shared/Button";
 import { Container } from "../../shared/Container";
 import { Cross } from "../../shared/Cross";
@@ -5,6 +6,8 @@ import { Highlighter } from "../../shared/Highlighter";
 import { Globe } from "../../site/Globe";
 
 export function HeroOrganism() {
+  const { t } = useTranslation();
+
   return (
     <section
       id="eu-top"
@@ -17,25 +20,23 @@ export function HeroOrganism() {
       <Container className="relative grid min-h-[680px] grid-cols-1 items-center gap-10 pb-12 md:grid-cols-[.85fr_1.15fr] md:gap-12">
         <div className="relative z-[2] pb-12">
           <p className="mb-5 text-[11px] uppercase tracking-[0.2em] text-[#45677d]">
-            Asistencia sanitaria internacional
+            {t("hero.eyebrow")}
           </p>
           <h1 className="max-w-[13.5em] text-[clamp(2.375rem,4.6vw,3.625rem)] leading-[1.1] tracking-normal text-navy">
-            Atención médica que{" "}
+            {t("hero.titlePrefix")}{" "}
             <Highlighter action="underline" strokeWidth={3} padding={3}>
-              atraviesa fronteras
+              {t("hero.titleHighlight")}
             </Highlighter>
           </h1>
           <p className="mt-6 max-w-[31em] text-[15.5px] leading-[1.62] text-[#3c6480]">
-            Red médica propia, telemedicina y coordinación de asistencia para
-            aseguradoras y empresas. Cuidamos de tus pacientes estén donde
-            estén, en su idioma.
+            {t("hero.description")}
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <AnchorButton href="#eu-contacto" variant="gold">
-              Solicitar una demo
+              {t("common.requestDemo")}
             </AnchorButton>
             <AnchorButton href="#eu-cobertura" variant="outline">
-              Ver cobertura
+              {t("hero.viewCoverage")}
             </AnchorButton>
           </div>
         </div>

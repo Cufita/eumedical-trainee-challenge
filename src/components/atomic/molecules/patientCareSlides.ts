@@ -7,38 +7,40 @@ import redPropiaPoster from "../../../assets/patient-care/red-propia-poster.jpg"
 import atencionDigital from "../../../assets/patient-care/atencion-digital.mp4";
 import atencionDigitalPoster from "../../../assets/patient-care/atencion-digital-poster.jpg";
 
+export interface PatientCareSlideAsset {
+  id: "medicosDomicilio" | "tecnologiaAvanzada" | "redPropia" | "atencionDigital";
+  video: string;
+  poster: string;
+}
+
 export interface PatientCareSlide {
+  id: PatientCareSlideAsset["id"];
   title: string;
   description: string;
   video: string;
   poster: string;
 }
 
-// Copy matches the "Cuatro formas de llevar la atención médica hasta donde
-// estés" capacidades section in design-reference.html (ported from the live
-// eumedical.es copy), not paraphrased.
-export const patientCareSlides: PatientCareSlide[] = [
+// Ids map to patientCare.slides.* keys in src/i18n/locales — copy lives
+// there now (see the ES bundle for the ported eumedical.es original text).
+export const patientCareSlideAssets: PatientCareSlideAsset[] = [
   {
-    title: "Médicos a domicilio",
-    description: "Coordinación de visitas presenciales en España, Portugal, Italia y Francia.",
+    id: "medicosDomicilio",
     video: medicosDomicilio,
     poster: medicosDomicilioPoster,
   },
   {
-    title: "Tecnología avanzada",
-    description: "Plataforma segura, fiable y sencilla de usar, sin que tu equipo tenga que desarrollar nada.",
+    id: "tecnologiaAvanzada",
     video: tecnologiaAvanzada,
     poster: tecnologiaAvanzadaPoster,
   },
   {
-    title: "Red propia",
-    description: "Más de 80 países y 10 idiomas cubiertos con profesionales propios, no subcontratados.",
+    id: "redPropia",
     video: redPropia,
     poster: redPropiaPoster,
   },
   {
-    title: "Atención digital",
-    description: "Accesible en cualquier momento y desde cualquier lugar, sin listas de espera.",
+    id: "atencionDigital",
     video: atencionDigital,
     poster: atencionDigitalPoster,
   },

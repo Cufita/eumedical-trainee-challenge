@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
@@ -199,6 +200,7 @@ function makeOceanTexture() {
 }
 
 export function Globe() {
+  const { t } = useTranslation();
   const hostRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -526,14 +528,14 @@ export function Globe() {
       ref={hostRef}
       className="relative mx-auto aspect-square w-full max-w-[640px] touch-none"
       role="img"
-      aria-label="Globo interactivo con los paises donde opera Eumedical"
+      aria-label={t("globe.ariaLabel")}
     >
       <div className="absolute -left-5 bottom-[18%] z-[2] min-w-[108px] rounded-[18px] bg-navy px-6 py-4 text-center text-white shadow-[0_18px_38px_rgba(30,72,101,.28)] max-sm:left-0">
         <div className="font-display text-[28px] font-semibold leading-none text-gold">
           80+
         </div>
         <div className="mt-1.5 text-[14.5px] font-semibold tracking-[0.05em] text-[#e4edf3]">
-          paises
+          {t("globe.countries")}
         </div>
       </div>
       <div className="absolute right-2 top-[8%] z-[2] min-w-[108px] rounded-[18px] bg-navy px-6 py-4 text-center text-white shadow-[0_18px_38px_rgba(30,72,101,.28)]">
@@ -541,7 +543,7 @@ export function Globe() {
           10+
         </div>
         <div className="mt-1.5 text-[14.5px] font-semibold tracking-[0.05em] text-[#e4edf3]">
-          idiomas
+          {t("globe.languages")}
         </div>
       </div>
     </div>

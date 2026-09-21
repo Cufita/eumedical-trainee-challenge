@@ -1,6 +1,5 @@
 import { HeroOrganism } from "../organisms/HeroOrganism";
 import { PatientCareOrganism } from "../organisms/PatientCareOrganism";
-import { PatientCareAltOrganism } from "../organisms/PatientCareAltOrganism";
 import { HowItWorksOrganism } from "../organisms/HowItWorksOrganism";
 import { AboutUsOrganism } from "../organisms/AboutUsOrganism";
 import { ServicesOrganism } from "../organisms/ServicesOrganism";
@@ -13,7 +12,6 @@ export function PublicLandingTemplate() {
     <main id="main">
       <HeroOrganism />
       <PatientCareOrganism />
-      <PatientCareAltOrganism />
       <HowItWorksOrganism />
       <AboutUsOrganism />
       <ServicesOrganism />

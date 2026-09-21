@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   Ambulance,
   CalendarHeart,
@@ -17,9 +18,8 @@ import { Container } from "../../shared/Container";
 import { SectionEyebrow } from "../atoms/SectionEyebrow";
 import { ServiceTile, type ServiceMotion } from "../molecules/ServiceTile";
 
-const services: Array<{
-  title: string;
-  description: string;
+const serviceDefs: Array<{
+  id: string;
   icon: LucideIcon;
   motion?: ServiceMotion;
   featured?: boolean;
@@ -27,86 +27,24 @@ const services: Array<{
   className?: string;
 }> = [
   {
-    title: "Fit to Fly",
-    description:
-      "Certificación médica que confirma la aptitud del paciente para volar con seguridad.",
+    id: "fitToFly",
     icon: PlaneTakeoff,
     motion: "fly",
     featured: true,
     className: "sm:col-span-2 lg:[grid-column:1/3] lg:[grid-row:1/3]",
   },
+  { id: "videoConsultation", icon: Video, motion: "rec" },
+  { id: "medicalRounds", icon: Stethoscope, motion: "pulse-trace" },
+  { id: "ambulances", icon: Ambulance, motion: "speed" },
+  { id: "secondOpinion", icon: Clipboard, motion: "check" },
+  { id: "medicalEscort", icon: HeartHandshake, motion: "thump" },
+  { id: "medicalAudit", icon: ShieldCheck, motion: "scan" },
+  { id: "globalTelemedicine", icon: Globe },
+  { id: "socialSupport", icon: Users, motion: "glow-ring" },
+  { id: "eventCoverage", icon: CalendarHeart },
+  { id: "hospitalCoordination", icon: Hospital, motion: "radar" },
   {
-    title: "Videoconsulta 24/7",
-    description:
-      "Consulta médica por videollamada a cualquier hora, con receta local si hace falta.",
-    icon: Video,
-    motion: "rec",
-  },
-  {
-    title: "Rondas médicas",
-    description:
-      "Evaluación periódica del estado de salud de un grupo de personas.",
-    icon: Stethoscope,
-    motion: "pulse-trace",
-  },
-  {
-    title: "Ambulancias",
-    description:
-      "Coordinación de traslados urgentes o programados en el destino.",
-    icon: Ambulance,
-    motion: "speed",
-  },
-  {
-    title: "Segunda opinión",
-    description:
-      "Revisión de un diagnóstico por un especialista para confirmar el criterio médico.",
-    icon: Clipboard,
-    motion: "check",
-  },
-  {
-    title: "Escolta médica",
-    description:
-      "Acompañamiento sanitario durante el traslado o la estancia del paciente.",
-    icon: HeartHandshake,
-    motion: "thump",
-  },
-  {
-    title: "Auditoría médica",
-    description:
-      "Control de calidad y seguimiento de la atención prestada por la red.",
-    icon: ShieldCheck,
-    motion: "scan",
-  },
-  {
-    title: "Telemedicina global",
-    description:
-      "Acceso remoto a atención médica desde cualquier país de la red.",
-    icon: Globe,
-  },
-  {
-    title: "Apoyo sociosanitario",
-    description:
-      "Acompañamiento social y sanitario en situaciones de vulnerabilidad.",
-    icon: Users,
-    motion: "glow-ring",
-  },
-  {
-    title: "Cobertura de eventos",
-    description:
-      "Equipo médico presente en eventos, competiciones o desplazamientos grupales.",
-    icon: CalendarHeart,
-  },
-  {
-    title: "Coordinación hospitalaria",
-    description:
-      "Gestión de ingresos, altas y comunicación directa con los centros.",
-    icon: Hospital,
-    motion: "radar",
-  },
-  {
-    title: "Centro de operaciones 24/7",
-    description:
-      "Central operativa disponible todos los días del año para cada caso.",
+    id: "operationsCenter",
     icon: Headset,
     motion: "equalizer",
     tinted: true,
@@ -115,16 +53,23 @@ const services: Array<{
 ];
 
 export function ServicesOrganism() {
+  const { t } = useTranslation();
+
   return (
     <section id="eu-servicios" className="bg-[#e9efe9] px-(--edge) py-24">
       <Container>
-        <SectionEyebrow>Servicios</SectionEyebrow>
+        <SectionEyebrow>{t("services.eyebrow")}</SectionEyebrow>
         <h2 className="mt-3 max-w-[20em] text-[clamp(1.7rem,3.1vw,2.375rem)] leading-[1.14]">
-          Un catálogo completo de asistencia médica
+          {t("services.title")}
         </h2>
         <ul className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {services.map((service) => (
-            <ServiceTile key={service.title} {...service} />
+          {serviceDefs.map(({ id, ...rest }) => (
+            <ServiceTile
+              key={id}
+              {...rest}
+              title={t(`services.items.${id}.title`)}
+              description={t(`services.items.${id}.description`)}
+            />
           ))}
         </ul>
       </Container>

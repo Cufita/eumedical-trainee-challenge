@@ -21,11 +21,11 @@ export function PatientCareCaption({ slide, index, local }: PatientCareCaptionPr
       style={{ opacity, transform: `translateY(${translateY}px)`, pointerEvents: active ? "auto" : "none" }}
       aria-hidden={active ? undefined : true}
     >
-      <span className="font-display text-[12px] tracking-[.08em] text-amber">
+      <span className="font-display text-[40px] leading-none tracking-[.02em] text-amber">
         {String(index + 1).padStart(2, "0")}
       </span>
-      <h3 className="mt-1.5 text-[clamp(1.3rem,2.2vw,1.75rem)] leading-[1.15] text-white">{slide.title}</h3>
-      <p className="mx-auto mt-2 max-w-[46ch] text-[15px] leading-[1.5] text-[#c4d5df]">{slide.description}</p>
+      <h3 className="mt-3 text-[clamp(1.5rem,2.6vw,2rem)] leading-[1.15] text-white">{slide.title}</h3>
+      <p className="mt-3 max-w-[34ch] text-[15px] leading-[1.6] text-[#c4d5df]">{slide.description}</p>
     </div>
   );
 }

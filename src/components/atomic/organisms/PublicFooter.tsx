@@ -1,45 +1,42 @@
-import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Container } from "../../shared/Container";
 import { BrandMark } from "../atoms/BrandMark";
 
 export function PublicFooter() {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-navy-2 px-(--edge) py-16 text-[#a9c3d2]">
       <Container>
         <div className="flex flex-wrap justify-between gap-10 border-b border-white/15 pb-10">
           <div>
             <BrandMark light />
-            <p className="mt-4 max-w-[24ch] text-sm">
-              Asistencia sanitaria digital sin fronteras.
-            </p>
+            <p className="mt-4 max-w-[24ch] text-sm">{t("footer.tagline")}</p>
           </div>
           <div className="flex gap-10">
             <div>
-              <h3 className="font-display text-sm text-white">Servicios</h3>
+              <h3 className="font-display text-sm text-white">{t("footer.servicesHeading")}</h3>
               <a className="mt-3 block text-sm" href="#eu-servicios">
-                Catálogo médico
+                {t("footer.catalog")}
               </a>
               <a className="block text-sm" href="#eu-como">
-                Cómo funciona
+                {t("footer.howItWorks")}
               </a>
             </div>
             <div>
-              <h3 className="font-display text-sm text-white">Compañía</h3>
+              <h3 className="font-display text-sm text-white">{t("footer.companyHeading")}</h3>
               <a className="mt-3 block text-sm" href="#eu-nosotros">
-                Nosotros
+                {t("footer.aboutUs")}
               </a>
               <a className="block text-sm" href="#eu-contacto">
-                Contacto
+                {t("footer.contact")}
               </a>
-              <Link className="block text-sm" to="/paciente">
-                Área paciente
-              </Link>
             </div>
           </div>
         </div>
         <div className="flex flex-wrap justify-between gap-3 pt-5 text-sm">
-          <span>© 2026 eumedical. Todos los derechos reservados.</span>
-          <span>Privacidad · Términos y condiciones</span>
+          <span>{t("footer.copyright")}</span>
+          <span>{t("footer.legal")}</span>
         </div>
       </Container>
     </footer>

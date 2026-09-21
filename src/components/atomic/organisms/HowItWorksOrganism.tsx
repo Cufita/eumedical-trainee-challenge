@@ -1,18 +1,31 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Container } from "../../shared/Container";
 import { SectionEyebrow } from "../atoms/SectionEyebrow";
 import { ProcessSteps } from "../molecules/ProcessSteps";
 import { PatientAppShowcase } from "../molecules/PatientAppShowcase";
 import { ShowcaseLightbox } from "../molecules/ShowcaseLightbox";
-import { howItWorksSteps } from "../molecules/howItWorksSteps";
+import { howItWorksStepAssets, type HowItWorksStep } from "../molecules/howItWorksSteps";
 
 const STEP_DURATION = 5200;
 
 export function HowItWorksOrganism() {
+  const { t } = useTranslation();
   const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
   const [paused, setPaused] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  const howItWorksSteps: HowItWorksStep[] = useMemo(
+    () =>
+      howItWorksStepAssets.map((asset) => ({
+        ...asset,
+        title: t(`howItWorks.steps.${asset.id}.title`),
+        description: t(`howItWorks.steps.${asset.id}.description`),
+        imageLabel: t(`howItWorks.steps.${asset.id}.imageLabel`),
+      })),
+    [t],
+  );
 
   const stepStartRef = useRef(0);
   const pausedAtRef = useRef<number | null>(null);
@@ -59,7 +72,7 @@ export function HowItWorksOrganism() {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [active, paused]);
+  }, [active, paused, howItWorksSteps.length]);
 
   return (
     <section id="eu-como" className="bg-[#f7f7f4] px-(--edge) py-20 md:py-24">
@@ -75,9 +88,9 @@ export function HowItWorksOrganism() {
           }}
         />
         <div>
-          <SectionEyebrow>Cómo funciona</SectionEyebrow>
+          <SectionEyebrow>{t("howItWorks.eyebrow")}</SectionEyebrow>
           <h2 className="mt-3 text-[clamp(1.7rem,3.1vw,2.375rem)] leading-[1.14]">
-            De la primera llamada a la resolución
+            {t("howItWorks.title")}
           </h2>
           <ProcessSteps
             steps={howItWorksSteps}

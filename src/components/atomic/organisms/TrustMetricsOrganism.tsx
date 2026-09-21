@@ -1,22 +1,24 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Star } from "lucide-react";
 import { Container } from "../../shared/Container";
 import { Cross } from "../../shared/Cross";
 import { NumberTicker } from "../atoms/NumberTicker";
 
 const stats: Array<{
+  id: string;
   value: number;
   decimals?: number;
   suffix?: string;
-  label: string;
 }> = [
-  { value: 90, suffix: "k", label: "Pacientes satisfechos" },
-  { value: 250, label: "Médicos expertos" },
-  { value: 70, suffix: "k", label: "Recetas aceptadas" },
-  { value: 10, label: "Especialidades médicas" },
+  { id: "patients", value: 90, suffix: "k" },
+  { id: "doctors", value: 250 },
+  { id: "prescriptions", value: 70, suffix: "k" },
+  { id: "specialties", value: 10 },
 ];
 
 export function TrustMetricsOrganism() {
+  const { t } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
   const [revealed, setRevealed] = useState(false);
 
@@ -50,12 +52,12 @@ export function TrustMetricsOrganism() {
       />
       <Container className="relative">
         <h2 className="mx-auto max-w-[19em] text-center text-[clamp(1.7rem,3.1vw,2.375rem)] leading-[1.16] text-white">
-          Una calidad que se sostiene en cada consulta
+          {t("trustMetrics.title")}
         </h2>
 
         <div className="mt-14 grid grid-cols-2 gap-y-10 sm:grid-cols-4 sm:gap-x-6">
           {stats.map((stat) => (
-            <div key={stat.label} className="flex flex-col items-center text-center">
+            <div key={stat.id} className="flex flex-col items-center text-center">
               <div className="flex items-center gap-1.5">
                 <Cross size={20} className="shrink-0" />
                 <span className="font-display text-[clamp(2.1rem,4.6vw,3.4rem)] font-light leading-none text-white">
@@ -66,17 +68,23 @@ export function TrustMetricsOrganism() {
                   />
                 </span>
               </div>
-              <span className="mt-3 text-sm text-[#b9cbd8]">{stat.label}</span>
+              <span className="mt-3 text-sm text-[#b9cbd8]">
+                {t(`trustMetrics.stats.${stat.id}`)}
+              </span>
             </div>
           ))}
         </div>
 
         <div className="mx-auto mt-16 flex max-w-[26em] flex-col items-center border-t border-white/15 pt-10 text-center">
           <p className="font-display text-lg text-white">
-            Nuestra calidad siempre prevalece
+            {t("trustMetrics.qualityStatement")}
           </p>
           <div className="mt-4 flex items-center gap-3">
-            <div className="flex gap-1 text-gold" role="img" aria-label="4.9 de 5 estrellas">
+            <div
+              className="flex gap-1 text-gold"
+              role="img"
+              aria-label={t("trustMetrics.ratingAriaLabel", { rating: "4.9" })}
+            >
               {Array.from({ length: 5 }).map((_, index) => (
                 <Star
                   key={index}
@@ -98,8 +106,7 @@ export function TrustMetricsOrganism() {
             </span>
           </div>
           <p className="mt-5 max-w-[42ch] text-xs italic text-[#8fb0c2]">
-            *Según las encuestas de valoración de nuestros clientes después de
-            usar nuestros servicios
+            {t("trustMetrics.footnote")}
           </p>
         </div>
       </Container>
