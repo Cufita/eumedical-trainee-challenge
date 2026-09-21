@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&family=Didact+Gothic&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Same brand tokens as src/styles/tokens.css (Brand Book p.12). */
+      :root {
+        --color-navy: #1e4865;
+        --color-navy-2: #153549;
+        --color-gold: #e79f1a;
+        --color-sage-pale: #bfd7cd;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        width: 1200px;
+        height: 630px;
+        background: radial-gradient(circle at 24% 20%, var(--color-navy) 0%, var(--color-navy-2) 62%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 34px;
+        font-family: 'Didact Gothic', Arial, sans-serif;
+      }
+      .mark {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+      }
+      /* Exact shape/proportions of public/favicon.svg, scaled up. */
+      .cross {
+        position: relative;
+        width: 92px;
+        height: 92px;
+        border-radius: 23px;
+        background: var(--color-navy);
+        border: 2px solid rgba(255, 255, 255, 0.12);
+      }
+      .cross::before,
+      .cross::after {
+        content: '';
+        position: absolute;
+        background: var(--color-gold);
+        border-radius: 7.5px;
+        top: 50%;
+        left: 50%;
+      }
+      .cross::before {
+        width: 15px;
+        height: 52px;
+        transform: translate(-50%, -50%);
+      }
+      .cross::after {
+        width: 52px;
+        height: 15px;
+        transform: translate(-50%, -50%);
+      }
+      .wordmark {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 500;
+        font-size: 76px;
+        color: #ffffff;
+        letter-spacing: -0.01em;
+      }
+      .tagline {
+        font-size: 30px;
+        color: var(--color-sage-pale);
+        letter-spacing: 0.01em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mark">
+      <div class="cross"></div>
+      <div class="wordmark">eumedical</div>
+    </div>
+    <div class="tagline">Asistencia sanitaria digital sin fronteras</div>
+  </body>
+</html>
