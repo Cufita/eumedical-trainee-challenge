@@ -32,7 +32,7 @@ Secciones implementadas: header/nav responsive, hero, capacidades (propuesta de 
 
 ## 3. Parte B — Área de paciente (UX)
 
-Prototipo navegable (no solo mockup estático) con: **Inicio/Dashboard** (próxima consulta con CTA principal para unirse a la videoconsulta, accesos rápidos), **Consultas** (próximas + historial breve, botón de unión directo), **Historial**, **Documentos** (informes descargables), **Recetas** (activas/caducadas + estado vacío con guía para generar QR de farmacia) y **Perfil y soporte**.
+Prototipo navegable (no solo mockup estático) con: **Inicio/Dashboard** (próxima consulta con CTA principal para unirse a la videoconsulta, accesos rápidos), **Consultas** (pestañas Próximas/Historial, botón de unión directo en teleconsultas), **Estudios** (informes y resultados descargables, con filtros), **Recetas** (activas/caducadas + estado vacío con guía para generar QR de farmacia), **Perfil** y **Soporte**.
 
 Decisiones UX clave:
 - La acción más frecuente y urgente (**unirse a la videoconsulta**) es siempre el primer elemento visible del dashboard, no un ítem más de una lista — prioriza claridad y rapidez en un contexto sanitario.
