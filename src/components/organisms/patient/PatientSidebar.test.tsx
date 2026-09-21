@@ -1,102 +1,196 @@
-import { describe, expect, it } from 'vitest'
-import { fireEvent, render, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
-import App from '../../../App'
+import { describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import App from "../../../App";
+import { PatientSidebar } from "./PatientSidebar";
+
+const navigateMock = vi.fn();
+vi.mock("react-router-dom", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("react-router-dom")>();
+  return { ...actual, useNavigate: () => navigateMock };
+});
 
 // Lazy-loaded chunks (App.tsx) stack on top of PatientShellTemplate's ~500ms
 // simulated load, and can be slow to resolve under a busy parallel test run —
 // give both the query and the test itself real headroom (the test's own
 // default 5000ms timeout was racing the findBy timeout 1:1).
-const FIND_OPTIONS = { timeout: 10000 }
-const TEST_TIMEOUT = 15000
+const FIND_OPTIONS = { timeout: 10000 };
+const TEST_TIMEOUT = 15000;
 
-describe('Patient area sidebar navigation', () => {
+describe("Patient area sidebar navigation", () => {
   it(
-    'starts on the dashboard panel',
+    "starts on the dashboard panel",
     async () => {
       render(
-        <MemoryRouter initialEntries={['/paciente']}>
+        <MemoryRouter initialEntries={["/paciente"]}>
           <App />
         </MemoryRouter>,
-      )
-      expect(await screen.findByRole('heading', { name: 'Buenos días, María' }, FIND_OPTIONS)).toBeInTheDocument()
-      expect(screen.getByText('Próximas consultas')).toBeInTheDocument()
+      );
+      expect(
+        await screen.findByRole(
+          "heading",
+          { name: "Buenos días, María" },
+          FIND_OPTIONS,
+        ),
+      ).toBeInTheDocument();
+      expect(screen.getByText("Próximas consultas")).toBeInTheDocument();
     },
     TEST_TIMEOUT,
-  )
+  );
 
   it(
-    'switches to the Consultas panel when its nav item is clicked',
+    "switches to the Consultas panel when its nav item is clicked",
     async () => {
       render(
-        <MemoryRouter initialEntries={['/paciente']}>
+        <MemoryRouter initialEntries={["/paciente"]}>
           <App />
         </MemoryRouter>,
-      )
-      fireEvent.click(await screen.findByRole('link', { name: 'Consultas' }, FIND_OPTIONS))
-      expect(await screen.findByRole('heading', { name: 'Consultas' }, FIND_OPTIONS)).toBeInTheDocument()
-      expect(screen.getByText('Gestiona tus consultas médicas')).toBeInTheDocument()
+      );
+      fireEvent.click(
+        await screen.findByRole("link", { name: "Consultas" }, FIND_OPTIONS),
+      );
+      expect(
+        await screen.findByRole("heading", { name: "Consultas" }, FIND_OPTIONS),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Gestiona tus consultas médicas"),
+      ).toBeInTheDocument();
     },
     TEST_TIMEOUT,
-  )
+  );
 
   it(
-    'switches to the Recetas panel when its nav item is clicked',
+    "switches to the Recetas panel when its nav item is clicked",
     async () => {
       render(
-        <MemoryRouter initialEntries={['/paciente']}>
+        <MemoryRouter initialEntries={["/paciente"]}>
           <App />
         </MemoryRouter>,
-      )
-      fireEvent.click(await screen.findByRole('link', { name: 'Recetas' }, FIND_OPTIONS))
-      expect(await screen.findByRole('heading', { name: 'Recetas y medicación' }, FIND_OPTIONS)).toBeInTheDocument()
-      expect(screen.getByText('Prescripciones y tratamientos')).toBeInTheDocument()
+      );
+      fireEvent.click(
+        await screen.findByRole("link", { name: "Recetas" }, FIND_OPTIONS),
+      );
+      expect(
+        await screen.findByRole(
+          "heading",
+          { name: "Recetas y medicación" },
+          FIND_OPTIONS,
+        ),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Prescripciones y tratamientos"),
+      ).toBeInTheDocument();
     },
     TEST_TIMEOUT,
-  )
+  );
 
   it(
-    'switches to the Estudios panel when its nav item is clicked',
+    "switches to the Estudios panel when its nav item is clicked",
     async () => {
       render(
-        <MemoryRouter initialEntries={['/paciente']}>
+        <MemoryRouter initialEntries={["/paciente"]}>
           <App />
         </MemoryRouter>,
-      )
-      fireEvent.click(await screen.findByRole('link', { name: 'Estudios' }, FIND_OPTIONS))
-      expect(await screen.findByRole('heading', { name: 'Estudios' }, FIND_OPTIONS)).toBeInTheDocument()
-      expect(screen.getByText('Informes, imágenes y resultados de laboratorio')).toBeInTheDocument()
+      );
+      fireEvent.click(
+        await screen.findByRole("link", { name: "Estudios" }, FIND_OPTIONS),
+      );
+      expect(
+        await screen.findByRole("heading", { name: "Estudios" }, FIND_OPTIONS),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Informes, imágenes y resultados de laboratorio"),
+      ).toBeInTheDocument();
     },
     TEST_TIMEOUT,
-  )
+  );
 
   it(
-    'switches to the Perfil panel when its nav item is clicked',
+    "switches to the Perfil panel when its nav item is clicked",
     async () => {
       render(
-        <MemoryRouter initialEntries={['/paciente']}>
+        <MemoryRouter initialEntries={["/paciente"]}>
           <App />
         </MemoryRouter>,
-      )
-      fireEvent.click(await screen.findByRole('link', { name: 'Perfil' }, FIND_OPTIONS))
-      expect(await screen.findByRole('heading', { name: 'Perfil' }, FIND_OPTIONS)).toBeInTheDocument()
+      );
+      fireEvent.click(
+        await screen.findByRole("link", { name: "Perfil" }, FIND_OPTIONS),
+      );
+      expect(
+        await screen.findByRole("heading", { name: "Perfil" }, FIND_OPTIONS),
+      ).toBeInTheDocument();
     },
     TEST_TIMEOUT,
-  )
+  );
 
   it(
-    'switches to the Soporte panel when its nav item is clicked',
+    "switches to the Soporte panel when its nav item is clicked",
     async () => {
       render(
-        <MemoryRouter initialEntries={['/paciente']}>
+        <MemoryRouter initialEntries={["/paciente"]}>
           <App />
         </MemoryRouter>,
-      )
-      fireEvent.click(await screen.findByRole('link', { name: 'Soporte' }, FIND_OPTIONS))
-      expect(await screen.findByRole('heading', { name: 'Soporte' }, FIND_OPTIONS)).toBeInTheDocument()
-      expect(screen.getByText('Canales de atención al paciente')).toBeInTheDocument()
+      );
+      fireEvent.click(
+        await screen.findByRole("link", { name: "Soporte" }, FIND_OPTIONS),
+      );
+      expect(
+        await screen.findByRole("heading", { name: "Soporte" }, FIND_OPTIONS),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Canales de atención al paciente"),
+      ).toBeInTheDocument();
     },
     TEST_TIMEOUT,
-  )
+  );
 
-})
+  it(
+    "collapses the sidebar when the collapse toggle is clicked",
+    async () => {
+      render(
+        <MemoryRouter initialEntries={["/paciente"]}>
+          <App />
+        </MemoryRouter>,
+      );
+      const toggle = await screen.findByRole(
+        "button",
+        { name: "Esconder navegación" },
+        FIND_OPTIONS,
+      );
+      fireEvent.click(toggle);
+      expect(
+        screen.getByRole("button", { name: "Mostrar navegación" }),
+      ).toBeInTheDocument();
+    },
+    TEST_TIMEOUT,
+  );
+});
+
+describe("PatientSidebar (isolated)", () => {
+  it("renders the collapsed layout, hiding link and button labels", () => {
+    render(
+      <MemoryRouter>
+        <PatientSidebar collapsed onToggleCollapsed={() => {}} />
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole("link", { name: "Inicio" })).toHaveAttribute(
+      "title",
+      "Inicio",
+    );
+    expect(
+      screen.getByRole("button", { name: "Mostrar navegación" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Volver al sitio")).not.toBeInTheDocument();
+  });
+
+  it('navigates back to the public site when "Volver al sitio" is clicked', () => {
+    navigateMock.mockClear();
+    render(
+      <MemoryRouter>
+        <PatientSidebar collapsed={false} onToggleCollapsed={() => {}} />
+      </MemoryRouter>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Volver al sitio" }));
+    expect(navigateMock).toHaveBeenCalledWith("/");
+  });
+});

@@ -1,33 +1,112 @@
-import { describe, expect, it } from 'vitest'
-import { fireEvent, render, screen } from '@testing-library/react'
-import '../../i18n'
-import { PublicHeader } from './PublicHeader'
+import { describe, expect, it } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+import "../../i18n";
+import { PublicHeader } from "./PublicHeader";
 
-describe('PublicHeader', () => {
-  it('renders a navigation link for every section of the page', () => {
-    render(<PublicHeader />)
-    expect(screen.getByRole('link', { name: 'Servicios' })).toHaveAttribute('href', '#eu-servicios')
-    expect(screen.getByRole('link', { name: 'Cómo funciona' })).toHaveAttribute('href', '#eu-como')
-    expect(screen.getByRole('link', { name: 'Nosotros' })).toHaveAttribute('href', '#eu-nosotros')
-    expect(screen.getByRole('link', { name: 'Catálogo' })).toHaveAttribute('href', '#eu-catalogo')
-    expect(screen.getByRole('link', { name: 'Cobertura' })).toHaveAttribute('href', '#eu-cobertura')
-    expect(screen.getByRole('link', { name: 'Opiniones' })).toHaveAttribute('href', '#eu-testimonios')
-  })
+describe("PublicHeader", () => {
+  it("renders a navigation link for every section of the page", () => {
+    render(<PublicHeader />);
+    expect(screen.getByRole("link", { name: "Servicios" })).toHaveAttribute(
+      "href",
+      "#eu-servicios",
+    );
+    expect(screen.getByRole("link", { name: "Cómo funciona" })).toHaveAttribute(
+      "href",
+      "#eu-como",
+    );
+    expect(screen.getByRole("link", { name: "Nosotros" })).toHaveAttribute(
+      "href",
+      "#eu-nosotros",
+    );
+    expect(screen.getByRole("link", { name: "Catálogo" })).toHaveAttribute(
+      "href",
+      "#eu-catalogo",
+    );
+    expect(screen.getByRole("link", { name: "Cobertura" })).toHaveAttribute(
+      "href",
+      "#eu-cobertura",
+    );
+    expect(screen.getByRole("link", { name: "Opiniones" })).toHaveAttribute(
+      "href",
+      "#eu-testimonios",
+    );
+  });
 
-  it('links the brand mark back to the top of the page', () => {
-    render(<PublicHeader />)
-    expect(screen.getByRole('link', { name: 'Eumedical' })).toHaveAttribute('href', '#eu-top')
-  })
+  it("links the brand mark back to the top of the page", () => {
+    render(<PublicHeader />);
+    expect(screen.getByRole("link", { name: "Eumedical" })).toHaveAttribute(
+      "href",
+      "#eu-top",
+    );
+  });
 
-  it('toggles the mobile menu button state on click', () => {
-    render(<PublicHeader />)
-    const burger = screen.getByRole('button', { name: 'Abrir menú' })
-    expect(burger).toHaveAttribute('aria-expanded', 'false')
+  it("toggles the mobile menu button state on click", () => {
+    render(<PublicHeader />);
+    const burger = screen.getByRole("button", { name: "Abrir menú" });
+    expect(burger).toHaveAttribute("aria-expanded", "false");
 
-    fireEvent.click(burger)
-    expect(screen.getByRole('button', { name: 'Cerrar menú' })).toHaveAttribute('aria-expanded', 'true')
+    fireEvent.click(burger);
+    expect(screen.getByRole("button", { name: "Cerrar menú" })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Cerrar menú' }))
-    expect(screen.getByRole('button', { name: 'Abrir menú' })).toHaveAttribute('aria-expanded', 'false')
-  })
-})
+    fireEvent.click(screen.getByRole("button", { name: "Cerrar menú" }));
+    expect(screen.getByRole("button", { name: "Abrir menú" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+  });
+
+  it("closes the mobile menu on Escape, but ignores other keys", () => {
+    render(<PublicHeader />);
+    fireEvent.click(screen.getByRole("button", { name: "Abrir menú" }));
+    expect(screen.getByRole("button", { name: "Cerrar menú" })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
+
+    fireEvent.keyDown(document, { key: "Enter" });
+    expect(screen.getByRole("button", { name: "Cerrar menú" })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.getByRole("button", { name: "Abrir menú" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+  });
+
+  it("closes the mobile menu when the backdrop is clicked", () => {
+    const { container } = render(<PublicHeader />);
+    fireEvent.click(screen.getByRole("button", { name: "Abrir menú" }));
+    expect(screen.getByRole("button", { name: "Cerrar menú" })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
+
+    const backdrop = container.querySelector('[aria-hidden="true"]')!;
+    fireEvent.click(backdrop);
+    expect(screen.getByRole("button", { name: "Abrir menú" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+  });
+
+  it("closes the mobile menu when a section link is clicked", () => {
+    render(<PublicHeader />);
+    fireEvent.click(screen.getByRole("button", { name: "Abrir menú" }));
+    expect(screen.getByRole("button", { name: "Cerrar menú" })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
+
+    fireEvent.click(screen.getByRole("link", { name: "Servicios" }));
+    expect(screen.getByRole("button", { name: "Abrir menú" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+  });
+});
