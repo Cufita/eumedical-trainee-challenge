@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 .config/impeccable/
+.impeccable/
 
 # Editor directories and files
 .vscode/*
