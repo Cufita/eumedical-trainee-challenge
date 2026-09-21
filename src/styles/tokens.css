@@ -1,17 +1,37 @@
-/* Brand tokens — Eumedical Brand Book, sept. 2021. Ported 1:1 from design-reference.html. */
+/* Brand tokens — Eumedical Brand Book, sept. 2021 (docs/brand/BrandBook_EUMEDICAL_LOW.pdf, p.12).
+   Every value below is either one of the 9 corporate swatches (Dark Blue,
+   Medium Aquamarine, Light Aquamarine, Light Blue, Dark Orange, Plain
+   Yellow, White, Light Grey, Black) or a documented derived shade of one —
+   see the inline note on each. Component code should reference these
+   tokens (or Tailwind's opacity modifier on them, e.g. `text-navy/70`)
+   instead of hardcoding hex values, so the same palette carries over to
+   the patient area rebuild. */
 @theme {
-  --color-navy: #1e4865;
-  --color-navy-2: #153549;
-  --color-sage: #79b19c;
-  --color-sage-deep: #2f6653;
-  --color-sage-pale: #bfd7cd;
-  --color-mist: #e8eeec;
-  --color-cloud: #f2f2f2;
-  --color-cream: #f7f1e4;
-  --color-gold: #e79f1a;
-  --color-amber: #efbc0b;
-  --color-ink: #152329;
-  --color-white: #ffffff;
+  --color-navy: #1e4865; /* Dark Blue (brand swatch) */
+  --color-navy-2: #153549; /* darker derived shade of Dark Blue, for deep chrome (headers, nav) */
+  --color-sage: #79b19c; /* Medium Aquamarine (brand swatch) */
+  --color-sage-deep: #2f6653; /* AA-contrast-corrected shade of Medium Aquamarine — see README §5 */
+  --color-sage-pale: #bfd7cd; /* Light Aquamarine (brand swatch) */
+  --color-mist: #d9e4de; /* Light Blue (brand swatch) */
+  --color-cloud: #f2f2f2; /* Light Grey (brand swatch) */
+  --color-gold: #e79f1a; /* Dark Orange (brand swatch) */
+  --color-amber: #efbc0b; /* Plain Yellow (brand swatch) */
+  --color-slate: #5a6b73; /* secondary/muted body text, reused across patient rows and stats */
+  --color-warn-bg: #fbe8c4; /* warning badge background (e.g. expired prescription) */
+  --color-warn-text: #8a5f04; /* warning badge text, paired with --color-warn-bg */
+  --color-success-bg: #dcece5; /* success badge background (e.g. active prescription), derived tint of Medium Aquamarine */
+  --color-success-text: #205943; /* success badge text, paired with --color-success-bg */
+  --color-navy-tint: #e2ebf1; /* pale tint of Dark Blue, active state on light chrome (patient sidebar) */
+  --color-ink: #152329; /* near-black body text, softened from Black (brand swatch) for readability */
+  --color-white: #ffffff; /* White (brand swatch) */
+  --color-fog: #e6e6e0; /* neutral decorative tint (hero's ghost-cross accent) — not a brand swatch */
+
+  /* Globe illustration (Globe.tsx) — canvas/WebGL fill colors. Not Tailwind
+     classes: read at runtime via getComputedStyle since <canvas> can't
+     resolve CSS custom properties on its own. */
+  --color-globe-ocean-dark: #0c3a55;
+  --color-globe-ocean-mid: #12547a;
+  --color-globe-land: #dcebf2;
 
   --font-display: 'Outfit', 'Didact Gothic', sans-serif;
   --font-label: 'Didact Gothic', sans-serif;

@@ -6,7 +6,7 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-[#f7f7f4] text-ink;
+    @apply bg-cloud text-ink;
     font-family: var(--font-body);
     font-size: 16px;
     line-height: 1.6;
