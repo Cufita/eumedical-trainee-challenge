@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Currently a single self-contained `index.html` (no build step, no framework) — the delivered challenge submission. A React + TypeScript + Vite scaffold already exists under `src/` (with eslint, vitest, playwright, tailwindcss, react-router-dom, zustand, etc. pre-installed) but is still unused default Vite boilerplate. Decision: migrate the design in `index.html` into that `src/` scaffold as the basis for a real product build-out (in progress).
+React + TypeScript + Vite, componentized under `src/` (atomic-design layout: atoms/molecules/organisms/templates/pages), with react-router-dom for routing, zustand for patient-area state, Tailwind v4 for styling, and eslint/vitest/playwright/storybook for quality tooling — this is the delivered challenge submission. `design-reference.html` at the repo root is kept as the original static HTML/CSS design (the audited baseline before componentization) for historical reference only; it is not part of the running app.
 
 ## Users
 
@@ -32,11 +32,10 @@ The repo also ships a starter `package.json` with intentional bugs (React 19 vs 
 
 ## Capabilities and Constraints
 
-- Part A (public site, in `index.html`): responsive header/nav, hero, capabilities, services, trust/metrics block (real figures: 90k patients, 250 doctors, 70k prescriptions, 10 specialties, 4.9/5), corporate/coverage section, contact (mock form, no backend), footer.
-- Part B (patient area, in `index.html`): Dashboard (next consultation + join-video CTA, quick actions), Consultations (upcoming + brief history, direct join), History, Documents (downloadable reports), Prescriptions (active/expired + empty state guiding pharmacy QR generation), Profile & support. Six-section sidebar always visible; view is toggled with plain JS show/hide (no router) in the current prototype.
-- No real backend: contact form and patient-area data are mocked/static.
+- Part A (public site, route `/`): responsive header/nav, hero, capabilities, services, trust/metrics block (real figures: 90k patients, 250 doctors, 70k prescriptions, 10 specialties, 4.9/5), corporate/coverage section, contact (mock form, no backend), footer.
+- Part B (patient area, routes under `/paciente`): Dashboard (next consultation + join-video CTA, quick actions), Consultations (upcoming + history tabs, direct join), Studies/documents (downloadable reports), Prescriptions (active/expired), Profile & support, plus a 404 page for unmatched routes. Sidebar navigation via `react-router-dom`; state (appointments, prescriptions, studies, profile) lives in a typed `zustand` store with mocked fixtures under `src/mocks/`.
+- No real backend: contact form, teleconsultation "join" links, and patient-area data are mocked/static — actions that would need one show a clear error/toast instead of failing silently.
 - Visual direction is primarily graphic (shapes, cross motif, gradients) plus a simulated live-teleconsult UI chip, since no real Eumedical image library was available. One exception: the "Sobre nosotros" section uses one licensed, representative stock photo of a medical team (Pexels License, credited in code) — used generically to illustrate the kind of team Eumedical coordinates, not presented as Eumedical's own literal staff.
-- In progress: componentizing `index.html` into `src/` as a real React + TypeScript app, replacing the JS toggle with `react-router-dom` routing and mocked data with typed fixtures behind a `zustand` store.
 
 ## Brand Commitments
 
@@ -46,7 +45,7 @@ Company name "Eumedical" (lowercase "eumedical" in the logotype lockup). Identit
 
 - Brand Book: `docs/brand/BrandBook_EUMEDICAL_LOW.pdf`.
 - Real content and trust metrics sourced from the live `eumedical.es` site: 90k patients, 250 doctors, 70k prescriptions, 10 specialties, 4.9/5 rating.
-- `index.html` is the audited reference implementation of both surfaces (see README.md sections 1–3 and 5 for design rationale and the Impeccable before/after audit).
+- `design-reference.html` is the original audited reference implementation of both surfaces (see README.md sections 1–3 and 5 for design rationale and the Impeccable before/after audit); `src/` is the current, delivered React implementation.
 - No real photo library, testimonials, case studies, or press on hand — future work must not fabricate these.
 
 ## Product Principles
@@ -59,4 +58,4 @@ Company name "Eumedical" (lowercase "eumedical" in the logotype lockup). Identit
 
 ## Accessibility & Inclusion
 
-AA color contrast, visible focus states, `prefers-reduced-motion` support, corrected heading hierarchy, full keyboard navigation, and a skip-link are already implemented in `index.html` and must be preserved (not regressed) in the React componentization.
+AA color contrast, visible focus states, `prefers-reduced-motion` support, corrected heading hierarchy, full keyboard navigation, and a skip-link are implemented in the current `src/` React app and must be preserved in future changes.

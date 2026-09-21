@@ -13,10 +13,6 @@ dist-ssr
 *.local
 .config/impeccable/
 
-# Stray duplicate Vite scaffold left behind by an earlier tool run — not
-# part of this app, do not track it.
-/eumedical-trainee-challenge/
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -27,3 +23,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+*storybook.log
+storybook-static
+
+# Playwright
+test-results
+playwright-report
+blob-report

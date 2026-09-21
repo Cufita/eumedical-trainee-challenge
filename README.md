@@ -111,37 +111,61 @@ Corrí `/impeccable critique` sobre el home público (`/`) y el dashboard/Receta
 
 ## 8. Estructura del proyecto
 
+Arquitectura **atomic design** (una sola jerarquía para sitio público + área de paciente; lo específico de pacientes vive namespaceado en un subfolder `patient/` dentro de cada nivel):
+
 ```
 src/
-  App.tsx                  # rutas: "/" (sitio público) y "/paciente/*" (área de paciente)
+  App.tsx                  # rutas: "/" (sitio público), "/paciente/*" (área de paciente) y 404 para el resto
   main.tsx                 # entry point, monta <BrowserRouter>
   index.css                # @import "tailwindcss" + tokens.css + estilos globales (cross, pulse, skip-link)
   setupTests.ts            # jest-dom para Vitest
+  hooks/
+    useDocumentTitle.ts    # <title> por ruta dentro de la SPA
+  utils/
+    teleconsulta.ts        # error compartido para el CTA "Unirse" (stub sin backend real)
   styles/
     tokens.css             # tokens de marca como @theme de Tailwind v4 (colores, fuentes, radios)
   store/
     patientStore.ts        # store de zustand con los datos del área de paciente + selectores derivados
   mocks/
-    types.ts, appointments.ts, documents.ts, prescriptions.ts   # fixtures tipadas (sin backend real)
+    types.ts, appointments.ts, prescriptions.ts, studies.ts, profile.ts   # fixtures tipadas (sin backend real)
   components/
-    shared/                # Button, Cross, Container, SectionHead, ListRow — usados por ambas partes
-    site/                  # Header, Hero, Capabilities, Services, Trust, Corporate, Contact, Footer, SitePage
-    patient/                # AppShell, Sidebar, Dashboard, Appointments, History, Documents, Prescriptions, Profile
+    atoms/                 # Button, Cross, Container, Tag, DotStatus, Globe, iconos — sin lógica de dominio
+    molecules/              # ListRow, SectionHead, ServiceTile, PrimaryNav... + molecules/patient/ (PatientLoadingSkeleton, AppointmentCard, StudyRow, PageHeader)
+    organisms/               # PublicHeader, PublicFooter, HeroOrganism... + organisms/patient/ (PatientSidebar, PatientTopBar)
+    templates/                # PublicLandingTemplate + templates/patient/ (PatientShellTemplate)
+    pages/                     # SitePage, NotFoundPage + pages/patient/ (DashboardPage, AppointmentsPage —con pestañas Próximas/Historial—, StudiesPage, PrescriptionsPage, ProfilePage, SupportPage)
+e2e/
+  patient-area.spec.ts     # smoke test de Playwright: sitio público + navegación del área de paciente
 ```
+
+Cada componente de `atoms/`, `molecules/` y `organisms/` que tiene una historia de Storybook la guarda junto al componente (`Componente.stories.tsx`); ver "Storybook" más abajo.
 
 Decisiones de arquitectura:
 - **Tailwind CSS** para estilos de componentes (ya estaba en `package.json`; CSS Modules habría sido igual de válido — lo consulté explícitamente antes de implementar). Los tokens de marca se declaran una vez en `src/styles/tokens.css` como bloque `@theme` de Tailwind v4, así generan utilidades reales (`bg-navy`, `text-sage-deep`, `font-display`, `rounded-lg`, etc.) en vez de vivir solo como variables CSS sueltas.
-- **react-router-dom** reemplaza el toggle de `classList`/`display:none` del prototipo original: `/paciente` es un layout (`AppShell`) con rutas anidadas por sección (`consultas`, `historial`, `documentos`, `recetas`, `perfil`), en vez de un solo componente con estado interno de "panel activo".
-- **zustand** guarda las citas, documentos, recetas y el perfil mockeados; el dashboard deriva sus contadores ("2 consultas próximas", "1 receta activa"...) de ese store en vez de tenerlos escritos a mano, así un backend real solo tendría que reemplazar las fixtures por llamadas a la API sin tocar los componentes.
+- **react-router-dom** reemplaza el toggle de `classList`/`display:none` del prototipo original: `/paciente` es un layout (`PatientShellTemplate`) con rutas anidadas por sección (`consultas` —con pestañas Próximas/Historial—, `estudios`, `recetas`, `perfil`, `soporte`), más un catch-all `*` que muestra una página 404 tanto a nivel raíz como dentro de `/paciente`. Las rutas `historial` y `documentos` quedan como redirects a `consultas` y `estudios` respectivamente, por compatibilidad con enlaces antiguos.
+- **zustand** guarda las citas, estudios, recetas y el perfil mockeados; el dashboard deriva sus contadores ("2 consultas próximas", "1 receta activa"...) de ese store en vez de tenerlos escritos a mano, así un backend real solo tendría que reemplazar las fixtures por llamadas a la API sin tocar los componentes.
 - El componente `Cross` reproduce el signo "+" del manual de marca como recurso gráfico reutilizable (icono decorativo, `aria-hidden`), igual que en `design-reference.html`.
+- **Atomic design aplanado** (`components/{atoms,molecules,organisms,templates,pages}`, sin wrapper intermedio) en vez de una carpeta por feature: el sitio público y el área de paciente comparten átomos y moléculas reales (`Button`, `Cross`, `Container`), así que separar por feature hubiera duplicado o forzado imports cruzados; lo específico de cada dominio se namespacea en un subfolder (`patient/`) dentro de cada nivel en vez de vivir en un árbol paralelo.
 
-## 9. Cómo ejecutar
+## 9. Storybook
+
+`npx storybook@latest init` configuró Storybook 10 (framework `@storybook/react-vite`) con los addons `a11y`, `docs` y `vitest`. `.storybook/preview.tsx` importa `src/index.css` (Tailwind + tokens de marca) y envuelve cada historia en `MemoryRouter`, porque varios componentes de pacientes (`PatientSidebar`, `PatientShellTemplate`, `DashboardPage`) usan `NavLink`/`useNavigate`/`Outlet`/`Link` de `react-router-dom` directamente. Las historias reutilizan los mocks tipados de `src/mocks/*` (vía `usePatientStore`, ya inicializado con esos datos) en vez de inventar fixtures nuevas.
+
+```bash
+npm run storybook         # http://localhost:6006
+npm run build-storybook   # build estático en storybook-static/ (gitignored)
+```
+
+## 10. Cómo ejecutar
 
 ```bash
 npm install      # ver nota abajo sobre @eumedical/shared
 npm run dev      # http://localhost:5173 — sitio público en "/", área paciente en "/paciente"
 npm run build    # tsc --noEmit + vite build
-npm run test     # vitest run — pruebas de Header, navegación del sidebar y validación del formulario de contacto
+npm run test     # vitest run — ver sección 11 para qué cubre
+npm run test:e2e # playwright — smoke test end-to-end (ver sección 11)
+npm run storybook # http://localhost:6006 — catálogo de componentes (ver sección 9)
 npm run lint     # eslint
 npm run type-check
 ```
@@ -151,3 +175,24 @@ npm run type-check
 **Nota sobre Node:** `engines.node` pide `>=24.0.0`; el entorno donde desarrollé esta parte corre Node 22, así que `npm install` imprime un warning `EBADENGINE` (no bloqueante). No cambié `engines` porque es una decisión de la sección 4 basada en el runtime objetivo real de producción, no un error a corregir.
 
 **Nota sobre `eslint.config.js`:** el archivo original llamaba a `reactHooks.configs.flat.recommended`, que no existe en la versión de `eslint-plugin-react-hooks` fijada en `package.json` (`^5.2.0`) — esa versión expone `configs.recommended` (formato eslintrc, no flat-config real) y `configs['recommended-latest']` (flat-config real). Sin este fix, `npm run lint` fallaba con un `TypeError` antes de analizar un solo archivo. Cambié la referencia a `reactHooks.configs['recommended-latest']`.
+
+## 11. Tests y cierre de huecos de calidad (post-componentización)
+
+Después de portar el diseño a React (sección 7), quedaban pendientes: tests reales, un par de estados de error/loading a medias, y una ruta 404. Esto es lo que se agregó, y por qué:
+
+**Tests (antes: 1 solo test de smoke; ahora: 19 archivos / 44 tests con `npm run test`, más 2 tests end-to-end con `npm run test:e2e`).**
+- Durante la componentización a `atoms/molecules/organisms/pages/templates` se habían borrado (sin reemplazo) dos tests que sí probaban lógica real: `Contact.test.tsx` y `Header.test.tsx`. Los reescribí contra los componentes nuevos (`ContactOrganism.test.tsx`, `PublicHeader.test.tsx`) antes de dar por cerrado el refactor, para no perder esa cobertura.
+- Agregué tests de la única lógica de negocio pura del proyecto: los selectores y la acción `cancelAppointment` de `src/store/patientStore.ts` (`patientStore.test.ts`).
+- Agregué tests de las páginas con más ramas de UI: `AppointmentsPage` (tabs Próximas/Historial, estados vacíos, "Unirse" solo en teleconsultas), `DashboardPage` (tarjeta de próxima consulta condicionada por tipo de cita) y `StudiesPage` (descarga con error simulado).
+- `npm run test:e2e` apuntaba a `playwright.e2e.config.ts`, que **no existía en el repo** — el script estaba roto desde el `package.json` de partida y nadie lo había corrido. Lo creé (Chromium headless contra el dev server) junto con `e2e/patient-area.spec.ts`, un flujo mínimo: home pública → `/paciente` → Consultas → pestaña Historial.
+- De paso, `vite.config.ts` no excluía `e2e/**` del runner de Vitest, así que `npm run test` intentaba ejecutar los specs de Playwright como si fueran tests de Vitest y fallaba con un error de "test() called here" — lo agregué a `test.exclude`.
+
+**Estados de error, loading y una ruta 404 que no existían:**
+- `PatientLoadingSkeleton.tsx` estaba construido (con su propia historia de Storybook) pero no se usaba en ningún lado — el comentario en el código decía "ver AppShell", un componente que ya no existe. Ahora `PatientShellTemplate` simula una carga inicial de ~500ms al entrar a `/paciente` y muestra ese skeleton mientras tanto.
+- El botón "Unirse" a teleconsulta (en el dashboard y en la lista de consultas) y el botón de descarga de estudios apuntaban a `'#'` — un link muerto que no hacía nada al hacer click, porque no hay backend real de videollamada ni archivos reales. Ahora ambos muestran un error explícito (`toast.error`) explicando que es una demo sin backend, en vez de fallar en silencio. De paso noté que el botón "Unirse" del dashboard aparecía incluso para consultas presenciales (no solo teleconsultas); lo condicioné al tipo de cita, igual que ya hacía el resto de la UI.
+- No había ruta 404: cualquier URL inválida bajo `/` o `/paciente` no mostraba nada. Agregué `NotFoundPage` (con el header/footer del sitio) y `PatientNotFoundPage` (dentro del shell de paciente, conserva el sidebar) como catch-all (`path="*"`) en `App.tsx`.
+- Cada página del área de paciente ahora actualiza `document.title` al navegar (`src/hooks/useDocumentTitle.ts`) — antes el `<title>` de la pestaña quedaba fijo en el de `index.html` sin importar qué pantalla estuviera abierta.
+
+**Documentación:** `PRODUCT.md` describía la app como "boilerplate de Vite sin usar" y la componentización como "en progreso" — desactualizado desde la sección 7. Lo corregí para reflejar que Partes A y B ya están implementadas en `src/`.
+
+**Con más tiempo, seguiría por acá** (además de lo ya listado en la sección 4): dividir el bundle de producción (Vite avisa que `index-*.js` pesa >500kB minificado — ningún `dynamic import()` todavía), subir la cobertura de tests más allá de las páginas/lógica más ramificadas (falta `ProfilePage`, `SupportPage`, `PrescriptionsPage`), y un pipeline de CI (no hay `.github/workflows`; hoy solo hay un hook de pre-commit local con Husky) que corra `type-check`, `lint` y `test` en cada push.
