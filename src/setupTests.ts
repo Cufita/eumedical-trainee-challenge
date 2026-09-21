@@ -30,3 +30,18 @@ if (typeof window.IntersectionObserver === 'undefined') {
   window.IntersectionObserver = mock
   globalThis.IntersectionObserver = mock
 }
+
+// @headlessui/react's `anchor` prop positions dropdowns/popovers via
+// floating-ui, which observes size changes to keep them positioned —
+// jsdom implements neither, so opening any anchored Menu/Popover in a
+// test throws without this stand-in.
+if (typeof window.ResizeObserver === 'undefined') {
+  class MockResizeObserver implements ResizeObserver {
+    observe = () => {}
+    unobserve = () => {}
+    disconnect = () => {}
+  }
+  const mock = MockResizeObserver as unknown as typeof ResizeObserver
+  window.ResizeObserver = mock
+  globalThis.ResizeObserver = mock
+}
