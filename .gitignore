@@ -32,3 +32,8 @@ storybook-static
 test-results
 playwright-report
 blob-report
+
+# Coverage
+coverage
+
+.vercel

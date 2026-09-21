@@ -1,5 +1,13 @@
 # Eumedical — Frontend & UX Trainee Challenge
 
+[![CI](https://github.com/Cufita/eumedical-trainee-challenge/actions/workflows/ci.yml/badge.svg)](https://github.com/Cufita/eumedical-trainee-challenge/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/Cufita/eumedical-trainee-challenge/badge.svg?branch=master)](https://coveralls.io/github/Cufita/eumedical-trainee-challenge?branch=master)
+[![Demo](https://img.shields.io/badge/demo-vercel-black)](https://eumedical-trainee-challenge.vercel.app)
+
+**Demo en vivo:** https://eumedical-trainee-challenge.vercel.app — desplegado en Vercel, sin necesidad de clonar el repo.
+
+> Nota: el repo es privado, así que los badges de CI/Coveralls de arriba solo se ven completos para quien tenga acceso al repo en GitHub.
+
 Entrega para el reto de rebranding web + UX de paciente. Incluye:
 
 - `design-reference.html` — sitio público rediseñado (Parte A) + prototipo funcional del área de paciente (Parte B), en un único archivo autocontenido (sin build step, se abre directo en el navegador). Este es el archivo original de la entrega (antes se llamaba `index.html`); se renombró porque el `index.html` de la raíz ahora es el entry point real de Vite para la app React (ver "Estructura del proyecto" más abajo). El contenido, diseño y copy de este archivo no cambiaron: sigue siendo la referencia visual que la app React reproduce fielmente.
@@ -34,11 +42,17 @@ Secciones implementadas: header/nav responsive, hero, capacidades (propuesta de 
 
 Prototipo navegable (no solo mockup estático) con: **Inicio/Dashboard** (próxima consulta con CTA principal para unirse a la videoconsulta, accesos rápidos), **Consultas** (pestañas Próximas/Historial, botón de unión directo en teleconsultas), **Estudios** (informes y resultados descargables, con filtros), **Recetas** (activas/caducadas + estado vacío con guía para generar QR de farmacia), **Perfil** y **Soporte**.
 
+El brief del reto (`docs/brand/Eumedical_Trainee_Challenge.docx.pdf`, Parte B) pide explícitamente: *"deben presentarse las pantallas principales, navegación propuesta y una breve explicación de las decisiones UX"*. Esta sección responde directamente a eso.
+
 Decisiones UX clave:
 - La acción más frecuente y urgente (**unirse a la videoconsulta**) es siempre el primer elemento visible del dashboard, no un ítem más de una lista — prioriza claridad y rapidez en un contexto sanitario.
 - Barra lateral con las 6 secciones pedidas por el reto, siempre visible, para que el paciente nunca pierda referencia de dónde está (importante para un usuario que puede estar ansioso o no ser experto en tecnología).
 - Estados vacíos con texto orientado a la acción (no solo "no hay datos"), siguiendo el criterio de trato humano del propio manual de marca.
 - Reutiliza los mismos tokens de marca que el sitio público para que la transición del marketing al producto se sienta como la misma compañía.
+- Loading skeleton real (~500ms simulados) en vez de un spinner genérico al entrar a `/paciente`, para comunicar progreso concreto en vez de una espera indefinida (detalle en sección 11).
+- Errores explícitos (`toast.error`) en vez de botones muertos para "Unirse" y "Descargar" cuando no hay backend real detrás — falla de forma visible y explicada, no en silencio (detalle en sección 11).
+- Página 404 dedicada dentro del shell de paciente (conserva el sidebar) en vez de una pantalla en blanco, para que el usuario nunca pierda el contexto de navegación (detalle en sección 11).
+- Decisiones heredadas de `design-reference.html` **conscientemente no resueltas** en esta entrega, documentadas como recomendación y no como descuido: el callejón sin salida del QR de recetas, la falta de ruta de renovación para recetas caducadas, y "Volver al sitio" oculto en mobile sin salida alternativa — justificación completa en la sección 7.2.
 
 ## 4. Diagnóstico del `package.json` (obligatorio del reto)
 
@@ -177,6 +191,8 @@ CI (`.github/workflows/ci.yml`) corre `type-check` + `lint` + `test` + `build` y
 
 **Nota sobre Node:** `engines.node` pide `>=24.0.0`; el entorno donde desarrollé esta parte corre Node 22, así que `npm install` imprime un warning `EBADENGINE` (no bloqueante). No cambié `engines` porque es una decisión de la sección 4 basada en el runtime objetivo real de producción, no un error a corregir.
 
+**Nota sobre deploy (Vercel):** `vercel.json` en la raíz define un rewrite (`/(.*) → /index.html`), necesario porque `react-router-dom` maneja rutas client-side (`/paciente/*`); sin eso, entrar directo o refrescar en una URL profunda da 404 en Vercel. El deploy inicial se hizo por CLI (`npx vercel --prod`) y quedó conectado al repositorio de GitHub, así que un push a `main`/`master` dispara un nuevo deploy automáticamente. URL: https://eumedical-trainee-challenge.vercel.app.
+
 **Nota sobre `eslint.config.js`:** el archivo original llamaba a `reactHooks.configs.flat.recommended`, que no existe en la versión de `eslint-plugin-react-hooks` fijada en `package.json` (`^5.2.0`) — esa versión expone `configs.recommended` (formato eslintrc, no flat-config real) y `configs['recommended-latest']` (flat-config real). Sin este fix, `npm run lint` fallaba con un `TypeError` antes de analizar un solo archivo. Cambié la referencia a `reactHooks.configs['recommended-latest']`.
 
 ## 11. Tests y cierre de huecos de calidad (post-componentización)
@@ -205,6 +221,17 @@ Para no quedarme con "es contenido, ya está" como excusa, diagnostiqué qué pe
 
 **SEO.** Usé `https://www.eumedical.es/` (el dominio real de la compañía, dado en el propio enunciado del reto) como canonical, URL de Open Graph y única entrada de `sitemap.xml` — no es un dominio inventado. Agregué también `og:image`/`twitter:image`: en vez de usar una foto real (no hay ninguna de Eumedical entregada para esto — mismo criterio que ya regía el resto de las imágenes, ver `PRODUCT.md`) o fabricar una que no representa a la marca, generé una tarjeta de marca real a partir de los tokens de `tokens.css` y la forma exacta del logo (`public/favicon.svg`) — sin inventar nada, solo tipografía y color ya confirmados por el Brand Book. El script (`scripts/generate-og-image.mjs`) renderiza `scripts/og-image/template.html` con Playwright a 1200×630 y escribe `public/og-image.png`; no corre en el build (nada que regenerar salvo que cambien los tokens de marca). Además: `robots.txt` (permite `/`, bloquea `/paciente` por ser área privada de paciente), y sincronicé `document.documentElement.lang` con el idioma activo del switch ES/EN (antes quedaba fijo en `"es"` del `index.html` aunque el contenido pasara a inglés). No agregué meta description dinámica por ruta dentro de `/paciente`: es un área privada que `robots.txt` ya excluye de indexación, así que no tiene beneficio real de SEO, a diferencia del `<title>` por ruta (sección anterior), que sí ayuda a quien navega con varias pestañas abiertas.
 
-**CI.** No había ningún pipeline automatizado — solo el hook de pre-commit local con Husky. Agregué `.github/workflows/ci.yml` con dos jobs sobre Node 24 (la versión que pide `engines.node`): `checks` (`type-check` + `lint` + `test` + `build`) y `e2e` (instala Chromium de Playwright y corre `test:e2e`), en push/PR a `main`/`master`.
+**CI.** No había ningún pipeline automatizado — solo el hook de pre-commit local con Husky. Agregué `.github/workflows/ci.yml` con dos jobs sobre Node 24 (la versión que pide `engines.node`): `checks` (`type-check` + `lint` + `test:coverage` + `build`) y `e2e` (instala Chromium de Playwright y corre `test:e2e`), en push/PR a `main`/`master`.
+
+**Cobertura.** `npm run test:coverage` corre Vitest con el provider `v8` y genera reporte `text`/`html`/`lcov` en `coverage/` (gitignored). El job `checks` de CI sube `coverage/lcov.info` a Coveralls (`coverallsapp/github-action`) en cada push/PR — ver badge de cobertura al inicio de este documento.
 
 **Con más tiempo, seguiría por acá** (además de lo ya listado en la sección 4): si el chunk de `Globe`/Three.js se vuelve un problema real medido (no solo el warning de build), evaluar una librería de globo más liviana o un fallback 2D para conexiones lentas; y sumar tests de integración más end-to-end (hoy el e2e cubre un flujo, no cada pantalla).
+
+## 12. Metodología: Spec-Driven Development (SDD)
+
+El proceso de esta entrega siguió, en la práctica, una estrategia de **Spec-Driven Development**: la spec se escribió antes que el código y cada iteración se validó contra esa spec en vez de contra el criterio subjetivo del momento.
+
+- **La spec del producto se escribió primero.** `PRODUCT.md` (generado con el flujo `impeccable:product-schema`) define plataforma, stack, usuarios, propósito, posicionamiento, capacidades y restricciones, compromisos de marca y principios del producto — antes de tocar el código de la Parte B. Los 5 "Product Principles" ahí definidos (fidelidad al Brand Book, diferenciación del template genérico de `eumedical.es`, prioridad a la acción de unirse a videoconsulta, validación por auditoría real en vez de gusto personal, no fabricar contenido) funcionaron como criterio de aceptación en cada decisión posterior, no como documentación retroactiva.
+- **`design-reference.html` como spec de diseño ejecutable.** No fue un mockup descartable: se trató como el contrato de diseño a reproducir fielmente al portar la Parte A/B a React (mismo copy, misma paleta, misma tipografía, mismas correcciones de accesibilidad) — ver sección 7. Las decisiones de UX heredadas y conscientemente no resueltas (sección 7.2) son justamente casos donde la spec original tenía un hueco real, y se documentó la brecha en vez de improvisar una solución fuera de alcance.
+- **Las auditorías Impeccable como validación de conformidad, no revisión libre.** Cada corrida de `impeccable detect`/`critique` (secciones 1, 5, 7.1 y 7.2) se hizo contra reglas concretas derivadas del Brand Book y de `PRODUCT.md`, y cada hallazgo se resolvió o se documentó explícitamente como decisión consciente (p. ej. Arial por especificación de marca) — el criterio de "listo" en cada iteración fue "conforme a la spec", no "se ve bien".
+- **`docs/brand/rules.md`** funciona como la versión resumida y consultable de la spec de marca (extraída del Brand Book en PDF), citada en cada decisión de color/tipografía/iconografía del README.

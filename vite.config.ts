@@ -16,6 +16,12 @@ export default defineConfig({
     // Playwright's own `test()` collides with vitest when the default glob
     // picks up e2e/*.spec.ts — those run separately via `npm run test:e2e`.
     exclude: ['**/node_modules/**', 'e2e/**'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html', 'lcov'],
+      reportsDirectory: './coverage',
+      exclude: ['**/*.stories.tsx', '**/*.config.*', 'src/setupTests.ts', '.storybook/**', 'e2e/**']
+    },
     projects: [{
       extends: true,
       test: {
