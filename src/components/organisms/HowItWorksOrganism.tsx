@@ -80,26 +80,18 @@ export function HowItWorksOrganism() {
         <PatientAppShowcase
           steps={howItWorksSteps}
           active={active}
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
+          className="order-2 md:order-1"
           onExpand={() => {
             setPaused(true);
             setLightboxOpen(true);
           }}
         />
-        <div>
+        <div className="order-1 md:order-2">
           <SectionEyebrow>{t("howItWorks.eyebrow")}</SectionEyebrow>
           <h2 className="mt-3 text-[clamp(1.7rem,3.1vw,2.375rem)] leading-[1.14]">
             {t("howItWorks.title")}
           </h2>
-          <ProcessSteps
-            steps={howItWorksSteps}
-            active={active}
-            progress={progress}
-            onSelect={goTo}
-            onActiveHoverStart={() => setPaused(true)}
-            onActiveHoverEnd={() => setPaused(false)}
-          />
+          <ProcessSteps steps={howItWorksSteps} active={active} progress={progress} onSelect={goTo} />
         </div>
       </Container>
 

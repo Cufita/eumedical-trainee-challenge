@@ -4,12 +4,14 @@ import '../../i18n'
 import { PublicHeader } from './PublicHeader'
 
 describe('PublicHeader', () => {
-  it('renders the primary navigation links', () => {
+  it('renders a navigation link for every section of the page', () => {
     render(<PublicHeader />)
-    expect(screen.getByRole('link', { name: 'Servicios' })).toHaveAttribute('href', '#eu-servicios')
+    expect(screen.getByRole('link', { name: 'Pacientes' })).toHaveAttribute('href', '#eu-cuidado-pacientes')
     expect(screen.getByRole('link', { name: 'Cómo funciona' })).toHaveAttribute('href', '#eu-como')
-    expect(screen.getByRole('link', { name: 'Cobertura' })).toHaveAttribute('href', '#eu-cobertura')
     expect(screen.getByRole('link', { name: 'Nosotros' })).toHaveAttribute('href', '#eu-nosotros')
+    expect(screen.getByRole('link', { name: 'Servicios' })).toHaveAttribute('href', '#eu-servicios')
+    expect(screen.getByRole('link', { name: 'Cobertura' })).toHaveAttribute('href', '#eu-cobertura')
+    expect(screen.getByRole('link', { name: 'Opiniones' })).toHaveAttribute('href', '#eu-testimonios')
   })
 
   it('links the brand mark back to the top of the page', () => {

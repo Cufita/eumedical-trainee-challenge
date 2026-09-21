@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -209,6 +209,10 @@ function makeOceanTexture() {
 export function Globe() {
   const { t } = useTranslation();
   const hostRef = useRef<HTMLDivElement>(null);
+  // Stays true until the countries fetch resolves (or fails) so the sphere,
+  // land borders, and country markers all appear in one frame instead of
+  // popping in one after another as each async piece finishes.
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -230,9 +234,13 @@ export function Globe() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.domElement.className = "block size-full cursor-grab";
     const stage = document.createElement("div");
-    stage.className = "absolute inset-0";
+    stage.className = "absolute inset-0 opacity-0 transition-opacity duration-500";
     stage.appendChild(renderer.domElement);
     host.prepend(stage);
+    const reveal = () => {
+      stage.style.opacity = "1";
+      setReady(true);
+    };
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.32));
     const sun = new THREE.DirectionalLight(0xffffff, 2.6);
@@ -389,9 +397,15 @@ export function Globe() {
         bordersMaterial.opacity = 1;
         bordersMaterial.needsUpdate = true;
         borders.userData.tex = bordersTex;
+        // One more frame so the new textures are actually on screen before
+        // the fade-in starts, instead of revealing a still-blank sphere.
+        requestAnimationFrame(reveal);
       })
       .catch((error: unknown) => {
-        if (!abort.signal.aborted) console.error(error);
+        if (!abort.signal.aborted) {
+          console.error(error);
+          reveal();
+        }
       });
 
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -537,6 +551,24 @@ export function Globe() {
       role="img"
       aria-label={t("globe.ariaLabel")}
     >
+      {/* Same gradient as HeroOrganism's Suspense fallback, so the hero reads
+          as one continuous "still loading" orb until the globe fades in —
+          rather than a blank flash, then a bare sphere, then borders/markers
+          popping in on top of it. */}
+      <div
+        aria-hidden="true"
+        className={`absolute inset-0 grid place-items-center rounded-full transition-opacity duration-500 ${ready ? "pointer-events-none opacity-0" : "opacity-100"}`}
+        style={{
+          background:
+            "radial-gradient(circle at 35% 32%, var(--color-globe-ocean-mid), var(--color-globe-ocean-dark) 72%)",
+        }}
+      >
+        <div className="loading-dots loading-dots--inverted">
+          <span />
+          <span />
+          <span />
+        </div>
+      </div>
       <div className="absolute -left-5 bottom-[18%] z-[2] min-w-[108px] rounded-[18px] bg-navy px-6 py-4 text-center text-white shadow-[0_18px_38px_rgba(30,72,101,.28)] max-sm:left-0">
         <div className="font-display text-[28px] font-semibold leading-none text-gold">
           80+

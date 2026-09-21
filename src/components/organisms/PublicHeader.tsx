@@ -48,22 +48,22 @@ export function PublicHeader() {
       <div
         aria-hidden="true"
         onClick={() => setOpen(false)}
-        className={`fixed inset-0 -z-10 bg-navy-2/35 backdrop-blur-sm transition-opacity duration-300 ease-out motion-reduce:transition-none md:hidden ${
+        className={`fixed inset-0 -z-10 bg-navy-2/35 backdrop-blur-sm transition-opacity duration-300 ease-out motion-reduce:transition-none lg:hidden ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />
       <div
-        className={`liquid-glass relative z-10 flex w-full max-w-[1200px] items-center gap-6 rounded-lg border transition-[margin-top,padding-top,padding-bottom,background-color,box-shadow,border-color] duration-300 ease-out motion-reduce:transition-none ${
+        className={`relative z-10 flex w-full max-w-[1200px] items-center gap-6 rounded-lg border border-white bg-cloud transition-[margin-top,padding-top,padding-bottom,box-shadow] duration-300 ease-out motion-reduce:transition-none ${
           scrolled
-            ? "mt-1.5 border-white/80 bg-cloud/75 px-6 py-2.5 shadow-[0_16px_38px_-14px_rgba(23,54,74,.4)]"
-            : "mt-3 border-white/60 bg-cloud/40 px-6 py-3.5 shadow-[0_10px_30px_-14px_rgba(23,54,74,.22)] md:mt-4"
-        } backdrop-blur-2xl backdrop-saturate-150`}
+            ? "mt-1.5 px-6 py-2.5 shadow-[0_16px_38px_-14px_rgba(23,54,74,.4)]"
+            : "mt-3 px-6 py-3.5 shadow-[0_10px_30px_-14px_rgba(23,54,74,.22)] lg:mt-4"
+        }`}
       >
         <a href="#eu-top" aria-label="Eumedical" className="relative z-[1]">
           <BrandMark />
         </a>
         <PrimaryNav open={open} mounted={mounted} onNavigate={() => setOpen(false)} />
-        <div className="relative z-[1] ml-auto hidden items-center gap-3 md:flex">
+        <div className="relative z-[1] ml-auto hidden items-center gap-3 lg:flex">
           <LanguageSwitcher />
           <AnchorButton href="#eu-contacto" variant="gold">
             {t("common.requestDemo")}
@@ -75,7 +75,7 @@ export function PublicHeader() {
           aria-expanded={open}
           aria-controls="eu-mobile-nav"
           onClick={() => setOpen((value) => !value)}
-          className="relative z-[1] flex size-10 shrink-0 items-center justify-center rounded-xl border-0 bg-navy/10 text-navy transition-colors duration-200 hover:bg-navy/15 md:hidden"
+          className="relative z-[1] ml-auto flex size-10 shrink-0 items-center justify-center rounded-xl border-0 bg-navy/10 text-navy transition-colors duration-200 hover:bg-navy/15 lg:hidden"
         >
           <span className="relative flex h-4 w-5 items-center justify-center">
             <span

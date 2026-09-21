@@ -45,7 +45,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
       <span
         aria-hidden="true"
         className={`pointer-events-none absolute inset-y-0.5 left-0.5 z-20 flex w-8 items-center justify-center rounded-full bg-navy text-[11px] font-semibold text-white shadow-[0_2px_6px_-1px_rgba(30,72,101,.55)] transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] motion-reduce:transition-none group-active:scale-95 ${
-          isSpanish ? "translate-x-0" : "translate-x-[34px]"
+          isSpanish ? "translate-x-0" : "translate-x-[32px]"
         }`}
       >
         {isSpanish ? "ES" : "EN"}

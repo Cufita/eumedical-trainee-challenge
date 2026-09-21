@@ -5,18 +5,9 @@ interface ProcessStepsProps {
   active: number;
   progress: number;
   onSelect: (index: number) => void;
-  onActiveHoverStart?: () => void;
-  onActiveHoverEnd?: () => void;
 }
 
-export function ProcessSteps({
-  steps,
-  active,
-  progress,
-  onSelect,
-  onActiveHoverStart,
-  onActiveHoverEnd,
-}: ProcessStepsProps) {
+export function ProcessSteps({ steps, active, progress, onSelect }: ProcessStepsProps) {
   return (
     // The live list's own open/close animations can briefly dip below their
     // resting height (the closing item shrinks a hair faster than the
@@ -48,8 +39,6 @@ export function ProcessSteps({
               isDone={isDone}
               progress={progress}
               onSelect={() => onSelect(index)}
-              onHoverStart={isActive ? onActiveHoverStart : undefined}
-              onHoverEnd={isActive ? onActiveHoverEnd : undefined}
             />
           );
         })}
@@ -65,18 +54,14 @@ interface StepItemProps {
   isDone: boolean;
   progress: number;
   onSelect?: () => void;
-  onHoverStart?: () => void;
-  onHoverEnd?: () => void;
 }
 
-function StepItem({ step, steps, isActive, isDone, progress, onSelect, onHoverStart, onHoverEnd }: StepItemProps) {
+function StepItem({ step, steps, isActive, isDone, progress, onSelect }: StepItemProps) {
   return (
     <li className="relative">
       <button
         type="button"
         onClick={onSelect}
-        onMouseEnter={onHoverStart}
-        onMouseLeave={onHoverEnd}
         aria-current={isActive}
         className="group grid w-full grid-cols-[40px_1fr] gap-4 rounded-xl py-3 text-left"
       >

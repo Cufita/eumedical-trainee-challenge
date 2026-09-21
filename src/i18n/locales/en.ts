@@ -14,10 +14,12 @@ export const en = {
   },
   nav: {
     ariaLabel: "Main",
-    servicios: "Services",
+    pacientes: "Patient care",
     comoFunciona: "How it works",
-    cobertura: "Coverage",
     nosotros: "About us",
+    servicios: "Services",
+    cobertura: "Coverage",
+    testimonios: "Testimonials",
   },
   hero: {
     eyebrow: "International healthcare assistance",

@@ -1,4 +1,3 @@
-import type { MouseEventHandler } from "react";
 import { Maximize2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Cross } from "../atoms/Cross";
@@ -7,31 +6,20 @@ import type { HowItWorksStep } from "./howItWorksSteps";
 interface PatientAppShowcaseProps {
   steps: HowItWorksStep[];
   active: number;
-  onMouseEnter?: MouseEventHandler<HTMLDivElement>;
-  onMouseLeave?: MouseEventHandler<HTMLDivElement>;
+  className?: string;
   onExpand?: () => void;
 }
 
-export function PatientAppShowcase({
-  steps,
-  active,
-  onMouseEnter,
-  onMouseLeave,
-  onExpand,
-}: PatientAppShowcaseProps) {
+export function PatientAppShowcase({ steps, active, className, onExpand }: PatientAppShowcaseProps) {
   const { t } = useTranslation();
 
   return (
-    <div className="relative md:h-full">
+    <div className={`relative md:h-full ${className ?? ""}`}>
       <div
         aria-hidden="true"
         className="absolute -inset-x-6 -inset-y-8 -z-10 bg-[radial-gradient(46%_60%_at_18%_12%,rgba(231,159,26,.16),transparent),radial-gradient(50%_65%_at_88%_92%,rgba(121,177,156,.22),transparent)] blur-2xl"
       />
-      <div
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        className="overflow-hidden rounded-[28px] shadow-[0_30px_60px_-24px_rgba(21,53,73,.45)] ring-1 ring-navy/[0.06] md:flex md:h-full md:flex-col"
-      >
+      <div className="overflow-hidden rounded-[28px] shadow-[0_30px_60px_-24px_rgba(21,53,73,.45)] ring-1 ring-navy/[0.06] md:flex md:h-full md:flex-col">
         <div className="flex shrink-0 items-center gap-2.5 bg-navy-2 px-5 py-3 text-[12px] text-white/65">
           <Cross variant="white" size={11} />
           <span className="truncate tracking-[.01em]">

@@ -15,10 +15,12 @@ export const es = {
   },
   nav: {
     ariaLabel: "Principal",
-    servicios: "Servicios",
+    pacientes: "Pacientes",
     comoFunciona: "Cómo funciona",
-    cobertura: "Cobertura",
     nosotros: "Nosotros",
+    servicios: "Servicios",
+    cobertura: "Cobertura",
+    testimonios: "Opiniones",
   },
   hero: {
     eyebrow: "Asistencia sanitaria internacional",
