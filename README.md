@@ -7,7 +7,7 @@
 
 **Demo en vivo:** [sitio público](https://eumedical-trainee-challenge.vercel.app) · [área de paciente](https://eumedical-trainee-challenge.vercel.app/paciente) — desplegado en Vercel, sin necesidad de clonar el repo.
 
-**Cobertura de tests:** el badge de Coveralls de arriba refleja el reporte línea por línea del último commit pusheado a `master` (se regenera automáticamente desde `coverage/lcov.info` en cada push/PR de CI) — es la fuente de verdad del % actual; no lo repito como número fijo en el texto para que no quede desactualizado si hay cambios locales todavía sin pushear.
+**Cobertura de tests:** el badge de Coveralls de arriba refleja el reporte línea por línea del último commit pusheado a `master` (se regenera automáticamente desde `coverage/lcov.info` en cada push/PR de CI) — no lo repito como número fijo en el texto para que no quede desactualizado si hay cambios locales todavía sin pushear.
 
 Entrega para el reto de rebranding web + UX de paciente. Incluye:
 
